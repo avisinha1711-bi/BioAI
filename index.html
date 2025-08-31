@@ -5,10 +5,10 @@
   <script>
     async function diagnose() {
       const data = {
-        "C=O": document.getElementById("co").value,
-        "CH3": document.getElementById("ch3").value,
-        "C-OH": document.getElementById("coh").value,
-        "O-H": document.getElementById("oh").value
+        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C=O)": document.getElementById("co").value,
+        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (CH3)": document.getElementById("ch3").value,
+        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C-OH)": document.getElementById("coh").value,
+        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (O-H)": document.getElementById("oh").value
       };
 
       const res = await fetch("http://127.0.0.1:5000/predict", {
@@ -34,4 +34,5 @@
   <p id="output"></p>
 </body>
 </html>
+
 
