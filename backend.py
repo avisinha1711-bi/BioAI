@@ -9,10 +9,10 @@ from sklearn.metrics import roc_curve
 
 # ---------- Setup ----------
 REGION_NAMES = [
-    "C=O (~1720)",
-    "CH3 (~1300)",
-    "C-OH (~1100)",
-    "O-H (~3500)"
+    "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C=O) (~1720)",
+    "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (CH3) (~1300)",
+    "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C-OH) (~1100)",
+    "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (O-H) (~3500)"
 ]
 
 NORMAL_MEANS = [1.2, 1.8, 2.8, 2.2]
@@ -89,5 +89,6 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
