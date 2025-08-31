@@ -1,43 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>BIOAI Diagnosis</title>
+  <title>BIOAI – AI-powered Cancer Photoacoustic Diagnosis</title>
+  <script>
+    async function diagnose() {
+      const data = {
+        "C=O": document.getElementById("co").value,
+        "CH3": document.getElementById("ch3").value,
+        "C-OH": document.getElementById("coh").value,
+        "O-H": document.getElementById("oh").value
+      };
+
+      const res = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById("output").innerText =
+        "Prediction: " + result.result + 
+        " (Probability: " + result.probability.toFixed(3) + ")";
+    }
+  </script>
 </head>
 <body>
   <h1>BIOAI – AI-powered Cancer Photoacoustic Diagnosis</h1>
-  <form id="form">
-    <label>C=O (~1720): <input type="number" step="0.01" id="v1"></label><br>
-    <label>CH3 (~1300): <input type="number" step="0.01" id="v2"></label><br>
-    <label>C-OH (~1100): <input type="number" step="0.01" id="v3"></label><br>
-    <label>O-H (~3500): <input type="number" step="0.01" id="v4"></label><br>
-    <button type="submit">Diagnose</button>
-  </form>
-
-  <div id="result"></div>
-
-  <script>
-    const API_URL = "https://your-backend.onrender.com/predict"; // replace later
-
-    document.getElementById("form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const values = [
-        parseFloat(document.getElementById("v1").value),
-        parseFloat(document.getElementById("v2").value),
-        parseFloat(document.getElementById("v3").value),
-        parseFloat(document.getElementById("v4").value)
-      ];
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ values })
-      });
-      const data = await res.json();
-      document.getElementById("result").innerHTML = `
-        <p>Probability: ${data.probability} (Threshold ${data.threshold})</p>
-        <p>Diagnosis: <b>${data.diagnosis}</b></p>
-        <ul>${data.feedback.map(f => `<li>${f}</li>`).join("")}</ul>
-      `;
-    });
-  </script>
+  <label>C=O (~1720): <input id="co" type="number" step="0.01" value="1"></label><br>
+  <label>CH3 (~1300): <input id="ch3" type="number" step="0.01" value="1"></label><br>
+  <label>C-OH (~1100): <input id="coh" type="number" step="0.01" value="1"></label><br>
+  <label>O-H (~3500): <input id="oh" type="number" step="0.01" value="1"></label><br>
+  <button onclick="diagnose()">Diagnose</button>
+  <p id="output"></p>
 </body>
 </html>
+
