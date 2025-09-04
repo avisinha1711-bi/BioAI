@@ -6,9 +6,13 @@
 <style>
   body { margin: 0; display: flex; background: black; color: white; font-family: Arial; }
   #dnaCanvas, #cancerCanvas { flex: 1; height: 100vh; display: block; }
-  #controls { position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  #controls { position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
               background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 10px; }
   button { margin: 0 5px; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; }
+  #header { position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            font-size: 20px; font-weight: bold; color: red; }
+  #footer { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            font-size: 16px; color: white; }
 </style>
 </head>
 <body>
@@ -16,11 +20,13 @@
 <canvas id="dnaCanvas"></canvas>
 <canvas id="cancerCanvas"></canvas>
 
+<div id="header">Cancer Metastasis by BioAI</div>
 <div id="controls">
   <button onclick="play()">Play</button>
   <button onclick="pause()">Pause</button>
   <button onclick="resetSim()">Reset</button>
 </div>
+<div id="footer">Tumor size: <span id="tumorSizeVal">10</span></div>
 
 <script>
 // ===== DNA HELIX ANIMATION =====
@@ -94,6 +100,7 @@ class Vessel {
 function resetSim(){
   tumorSize=10;
   vessels=[];
+  document.getElementById("tumorSizeVal").textContent = tumorSize.toFixed(1);
 }
 function play(){ running=true; }
 function pause(){ running=false; }
@@ -120,16 +127,16 @@ function updateCancer(){
   // draw/grow vessels
   vessels.forEach(v=>{ v.grow(); v.draw(); });
 
-  // stats
-  ctx.fillStyle="white";
-  ctx.fillText("Tumor size: "+tumorSize.toFixed(1),20,20);
-  ctx.fillText("Blood vessels: "+vessels.length,20,40);
+  // update footer size display
+  document.getElementById("tumorSizeVal").textContent = tumorSize.toFixed(1);
 }
 setInterval(updateCancer,30);
 
 </script>
 </body>
 </html>
+
+
 
 
 
