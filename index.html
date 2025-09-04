@@ -1,140 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>DNA & Cancer Angiogenesis Simulation</title>
-<style>
-  body { margin: 0; display: flex; background: black; color: white; font-family: Arial; }
-  #dnaCanvas, #cancerCanvas { flex: 1; height: 100vh; display: block; }
-  #controls { position: absolute; top: 50px; left: 50%; transform: translateX(-50%);
-              background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 10px; }
-  button { margin: 0 5px; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; }
-  #header { position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-            font-size: 20px; font-weight: bold; color: red; }
-  #footer { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            font-size: 16px; color: white; }
-</style>
+  <meta charset="UTF-8">
+  <title>Cancer Simulation with Angiogenesis</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      height: 100vh;
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    #dnaCanvas, #tumorCanvas {
+      flex: 1;
+    }
+    #controls {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #444;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #666;
+    }
+    #header {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: cyan;
+    }
+    #sizeDisplay {
+      position: absolute;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      font-size: 18px;
+      color: white;
+    }
+  </style>
 </head>
 <body>
+  <div id="header">CANCER METASTASIS BY BioAI</div>
+  <canvas id="dnaCanvas"></canvas>
+  <canvas id="tumorCanvas"></canvas>
+  <div id="sizeDisplay">Tumor size: 0</div>
+  <div id="controls">
+    <button onclick="playSim()">Play</button>
+    <button onclick="pauseSim()">Pause</button>
+    <button onclick="resetSim()">Reset</button>
+  </div>
 
-<canvas id="dnaCanvas"></canvas>
-<canvas id="cancerCanvas"></canvas>
+  <script>
+    // DNA Double Helix (left)
+    const dnaCanvas = document.getElementById('dnaCanvas');
+    const dnaCtx = dnaCanvas.getContext('2d');
+    dnaCanvas.width = window.innerWidth / 2;
+    dnaCanvas.height = window.innerHeight;
 
-<div id="header">Cancer Metastasis by BioAI</div>
-<div id="controls">
-  <button onclick="play()">Play</button>
-  <button onclick="pause()">Pause</button>
-  <button onclick="resetSim()">Reset</button>
-</div>
-<div id="footer">Tumor size: <span id="tumorSizeVal">10</span></div>
+    let angle = 0;
+    function drawDNA() {
+      dnaCtx.clearRect(0, 0, dnaCanvas.width, dnaCanvas.height);
+      const midX = dnaCanvas.width / 2;
+      const midY = dnaCanvas.height / 2;
+      const spacing = 8;
 
-<script>
-// ===== DNA HELIX ANIMATION =====
-const dnaCanvas = document.getElementById("dnaCanvas");
-const dnaCtx = dnaCanvas.getContext("2d");
-dnaCanvas.width = window.innerWidth / 2;
-dnaCanvas.height = window.innerHeight;
+      for (let i = -20; i < 20; i++) {
+        const y = midY + i * spacing;
+        const x1 = midX + Math.sin(angle + i * 0.3) * 60;
+        const x2 = midX + Math.sin(angle + i * 0.3 + Math.PI) * 60;
 
-let angle = 0;
-function drawDNA() {
-  dnaCtx.clearRect(0,0,dnaCanvas.width,dnaCanvas.height);
-  let midX = dnaCanvas.width/2;
-  let midY = dnaCanvas.height/2;
-  let spacing = 12;
-  let radius = 80;
-  for (let i = -20; i < 20; i++) {
-    let y = midY + i * spacing;
-    let x1 = midX + Math.cos(angle + i*0.3)*radius;
-    let x2 = midX + Math.cos(angle + i*0.3 + Math.PI)*radius;
-    dnaCtx.beginPath();
-    dnaCtx.moveTo(x1,y);
-    dnaCtx.lineTo(x2,y);
-    dnaCtx.strokeStyle="white";
-    dnaCtx.stroke();
-    dnaCtx.fillStyle="white";
-    dnaCtx.beginPath(); dnaCtx.arc(x1,y,6,0,2*Math.PI); dnaCtx.fill();
-    dnaCtx.beginPath(); dnaCtx.arc(x2,y,6,0,2*Math.PI); dnaCtx.fill();
-  }
-  angle += 0.02;
-}
-setInterval(drawDNA,30);
+        dnaCtx.beginPath();
+        dnaCtx.moveTo(x1, y);
+        dnaCtx.lineTo(x2, y);
+        dnaCtx.strokeStyle = 'white';
+        dnaCtx.stroke();
 
-// ===== CANCER & ANGIOGENESIS SIMULATION =====
-const cancerCanvas = document.getElementById("cancerCanvas");
-const ctx = cancerCanvas.getContext("2d");
-cancerCanvas.width = window.innerWidth / 2;
-cancerCanvas.height = window.innerHeight;
+        dnaCtx.beginPath();
+        dnaCtx.arc(x1, y, 4, 0, 2 * Math.PI);
+        dnaCtx.fillStyle = 'white';
+        dnaCtx.fill();
 
-let tumorSize = 10;
-let growthRate = 0.1;
-let vessels = [];
-let running = true;
-
-class Vessel {
-  constructor(x,y,angle,depth){
-    this.x = x; this.y = y; this.angle = angle; this.depth = depth;
-    this.length = 0;
-    this.maxLength = 20 + Math.random()*20;
-  }
-  grow(){
-    this.length++;
-    this.x += Math.cos(this.angle)*1.5;
-    this.y += Math.sin(this.angle)*1.5;
-    if (this.length > this.maxLength && this.depth<5){
-      // branch
-      vessels.push(new Vessel(this.x,this.y,this.angle+0.5+Math.random()*0.5,this.depth+1));
-      vessels.push(new Vessel(this.x,this.y,this.angle-0.5-Math.random()*0.5,this.depth+1));
-      this.length = 0;
+        dnaCtx.beginPath();
+        dnaCtx.arc(x2, y, 4, 0, 2 * Math.PI);
+        dnaCtx.fillStyle = 'white';
+        dnaCtx.fill();
+      }
+      angle += 0.05;
+      requestAnimationFrame(drawDNA);
     }
-  }
-  draw(){
-    ctx.strokeStyle="red";
-    ctx.lineWidth = Math.max(1,4-this.depth);
-    ctx.beginPath();
-    ctx.moveTo(this.x,this.y);
-    ctx.lineTo(this.x+Math.cos(this.angle)*2,this.y+Math.sin(this.angle)*2);
-    ctx.stroke();
-  }
-}
+    drawDNA();
 
-function resetSim(){
-  tumorSize=10;
-  vessels=[];
-  document.getElementById("tumorSizeVal").textContent = tumorSize.toFixed(1);
-}
-function play(){ running=true; }
-function pause(){ running=false; }
+    // Tumor Simulation with Angiogenesis (right)
+    const tumorCanvas = document.getElementById('tumorCanvas');
+    const tumorCtx = tumorCanvas.getContext('2d');
+    tumorCanvas.width = window.innerWidth / 2;
+    tumorCanvas.height = window.innerHeight;
 
-function updateCancer(){
-  if(!running) return;
-  ctx.clearRect(0,0,cancerCanvas.width,cancerCanvas.height);
-  let cx = cancerCanvas.width/2;
-  let cy = cancerCanvas.height/2;
-  tumorSize += growthRate;
+    let tumorSize = 5;
+    let growing = false;
+    let vessels = [];
+    let dots = [];
 
-  // tumor mass
-  ctx.beginPath();
-  ctx.arc(cx,cy,tumorSize,0,2*Math.PI);
-  ctx.fillStyle="rgba(255,0,0,0.6)";
-  ctx.fill();
+    function drawTumor() {
+      tumorCtx.clearRect(0, 0, tumorCanvas.width, tumorCanvas.height);
+      const midX = tumorCanvas.width / 2;
+      const midY = tumorCanvas.height / 2;
 
-  // angiogenesis trigger
-  if(tumorSize>40 && vessels.length===0){
-    for(let i=0;i<8;i++){
-      vessels.push(new Vessel(cx,cy,Math.random()*2*Math.PI,0));
+      // Draw tumor (red blob)
+      tumorCtx.beginPath();
+      tumorCtx.arc(midX, midY, tumorSize, 0, 2 * Math.PI);
+      tumorCtx.fillStyle = 'red';
+      tumorCtx.fill();
+
+      // Draw vessels with irregular curves
+      tumorCtx.strokeStyle = 'red';
+      vessels.forEach(v => {
+        tumorCtx.beginPath();
+        tumorCtx.moveTo(v.x, v.y);
+        let cx = v.x;
+        let cy = v.y;
+        for (let i = 0; i < v.segments; i++) {
+          const nx = cx + v.len / v.segments * Math.cos(v.angle + (Math.random() - 0.5) * 0.5);
+          const ny = cy + v.len / v.segments * Math.sin(v.angle + (Math.random() - 0.5) * 0.5);
+          tumorCtx.lineTo(nx, ny);
+          cx = nx;
+          cy = ny;
+        }
+        tumorCtx.stroke();
+      });
+
+      // Draw metastatic red dots
+      dots.forEach(d => {
+        tumorCtx.beginPath();
+        tumorCtx.arc(d.x, d.y, 3, 0, 2 * Math.PI);
+        tumorCtx.fillStyle = 'red';
+        tumorCtx.fill();
+      });
+
+      document.getElementById('sizeDisplay').textContent = `Tumor size: ${tumorSize.toFixed(1)}`;
     }
-  }
-  // draw/grow vessels
-  vessels.forEach(v=>{ v.grow(); v.draw(); });
 
-  // update footer size display
-  document.getElementById("tumorSizeVal").textContent = tumorSize.toFixed(1);
-}
-setInterval(updateCancer,30);
+    function updateTumor() {
+      if (growing) {
+        tumorSize += 0.05; // slower growth speed
 
-</script>
+        // Sprout vessels after threshold
+        if (tumorSize > 40 && Math.random() < 0.1) {
+          const angle = Math.random() * Math.PI * 2;
+          vessels.push({
+            x: tumorCanvas.width / 2 + Math.cos(angle) * tumorSize,
+            y: tumorCanvas.height / 2 + Math.sin(angle) * tumorSize,
+            angle: angle,
+            len: 30 + Math.random() * 30,
+            segments: 5 + Math.floor(Math.random() * 5)
+          });
+        }
+
+        // Produce metastatic red dots outside tumor
+        if (tumorSize > 30 && Math.random() < 0.02) {
+          dots.push({
+            x: Math.random() * tumorCanvas.width,
+            y: Math.random() * tumorCanvas.height
+          });
+        }
+      }
+      drawTumor();
+      requestAnimationFrame(updateTumor);
+    }
+
+    function playSim() { growing = true; }
+    function pauseSim() { growing = false; }
+    function resetSim() {
+      growing = false;
+      tumorSize = 5;
+      vessels = [];
+      dots = [];
+    }
+
+    updateTumor();
+  </script>
 </body>
 </html>
+
+
 
 
 
