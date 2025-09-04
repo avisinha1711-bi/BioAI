@@ -1,39 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>BIOAI – AI-powered Cancer Photoacoustic Diagnosis</title>
-  <script>
-    async function diagnose() {
-      const data = {
-        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C=O)": document.getElementById("co").value,
-        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (CH3)": document.getElementById("ch3").value,
-        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C-OH)": document.getElementById("coh").value,
-        "ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (O-H)": document.getElementById("oh").value
-      };
-
-      const res = await fetch("http://127.0.0.1:5000/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-      document.getElementById("output").innerText =
-        "Prediction: " + result.result + 
-        " (Probability: " + result.probability.toFixed(3) + ")";
-    }
-  </script>
+<meta charset="UTF-8">
+<title>DNA & Cancer Angiogenesis Simulation</title>
+<style>
+  body { margin: 0; display: flex; background: black; color: white; font-family: Arial; }
+  #dnaCanvas, #cancerCanvas { flex: 1; height: 100vh; display: block; }
+  #controls { position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+              background: rgba(0,0,0,0.7); padding: 10px 15px; border-radius: 10px; }
+  button { margin: 0 5px; padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; }
+</style>
 </head>
 <body>
-  <h1>BIOAI – AI-powered Cancer Photoacoustic Diagnosis</h1>
-  <label>ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C=O) (~1720): <input id="co" type="number" step="0.01" value="1"></label><br>
-  <label>ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (CH3) (~1300): <input id="ch3" type="number" step="0.01" value="1"></label><br>
-  <label>ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (C-OH) (~1100): <input id="coh" type="number" step="0.01" value="1"></label><br>
-  <label>ENTER THE READING FROM PHOTOACOUSTIC SPECTROSCOPY OF (O-H) (~3500): <input id="oh" type="number" step="0.01" value="1"></label><br>
-  <button onclick="diagnose()">Diagnose</button>
-  <p id="output"></p>
+
+<canvas id="dnaCanvas"></canvas>
+<canvas id="cancerCanvas"></canvas>
+
+<div id="controls">
+  <button onclick="play()">Play</button>
+  <button onclick="pause()">Pause</button>
+  <button onclick="resetSim()">Reset</button>
+</div>
+
+<script>
+// ===== DNA HELIX ANIMATION =====
+const dnaCanvas = document.getElementById("dnaCanvas");
+const dnaCtx = dnaCanvas.getContext("2d");
+dnaCanvas.width = window.innerWidth / 2;
+dnaCanvas.height = window.innerHeight;
+
+let angle = 0;
+function drawDNA() {
+  dnaCtx.clearRect(0,0,dnaCanvas.width,dnaCanvas.height);
+  let midX = dnaCanvas.width/2;
+  let midY = dnaCanvas.height/2;
+  let spacing = 12;
+  let radius = 80;
+  for (let i = -20; i < 20; i++) {
+    let y = midY + i * spacing;
+    let x1 = midX + Math.cos(angle + i*0.3)*radius;
+    let x2 = midX + Math.cos(angle + i*0.3 + Math.PI)*radius;
+    dnaCtx.beginPath();
+    dnaCtx.moveTo(x1,y);
+    dnaCtx.lineTo(x2,y);
+    dnaCtx.strokeStyle="white";
+    dnaCtx.stroke();
+    dnaCtx.fillStyle="white";
+    dnaCtx.beginPath(); dnaCtx.arc(x1,y,6,0,2*Math.PI); dnaCtx.fill();
+    dnaCtx.beginPath(); dnaCtx.arc(x2,y,6,0,2*Math.PI); dnaCtx.fill();
+  }
+  angle += 0.02;
+}
+setInterval(drawDNA,30);
+
+// ===== CANCER & ANGIOGENESIS SIMULATION =====
+const cancerCanvas = document.getElementById("cancerCanvas");
+const ctx = cancerCanvas.getContext("2d");
+cancerCanvas.width = window.innerWidth / 2;
+cancerCanvas.height = window.innerHeight;
+
+let tumorSize = 10;
+let growthRate = 0.1;
+let vessels = [];
+let running = true;
+
+class Vessel {
+  constructor(x,y,angle,depth){
+    this.x = x; this.y = y; this.angle = angle; this.depth = depth;
+    this.length = 0;
+    this.maxLength = 20 + Math.random()*20;
+  }
+  grow(){
+    this.length++;
+    this.x += Math.cos(this.angle)*1.5;
+    this.y += Math.sin(this.angle)*1.5;
+    if (this.length > this.maxLength && this.depth<5){
+      // branch
+      vessels.push(new Vessel(this.x,this.y,this.angle+0.5+Math.random()*0.5,this.depth+1));
+      vessels.push(new Vessel(this.x,this.y,this.angle-0.5-Math.random()*0.5,this.depth+1));
+      this.length = 0;
+    }
+  }
+  draw(){
+    ctx.strokeStyle="red";
+    ctx.lineWidth = Math.max(1,4-this.depth);
+    ctx.beginPath();
+    ctx.moveTo(this.x,this.y);
+    ctx.lineTo(this.x+Math.cos(this.angle)*2,this.y+Math.sin(this.angle)*2);
+    ctx.stroke();
+  }
+}
+
+function resetSim(){
+  tumorSize=10;
+  vessels=[];
+}
+function play(){ running=true; }
+function pause(){ running=false; }
+
+function updateCancer(){
+  if(!running) return;
+  ctx.clearRect(0,0,cancerCanvas.width,cancerCanvas.height);
+  let cx = cancerCanvas.width/2;
+  let cy = cancerCanvas.height/2;
+  tumorSize += growthRate;
+
+  // tumor mass
+  ctx.beginPath();
+  ctx.arc(cx,cy,tumorSize,0,2*Math.PI);
+  ctx.fillStyle="rgba(255,0,0,0.6)";
+  ctx.fill();
+
+  // angiogenesis trigger
+  if(tumorSize>40 && vessels.length===0){
+    for(let i=0;i<8;i++){
+      vessels.push(new Vessel(cx,cy,Math.random()*2*Math.PI,0));
+    }
+  }
+  // draw/grow vessels
+  vessels.forEach(v=>{ v.grow(); v.draw(); });
+
+  // stats
+  ctx.fillStyle="white";
+  ctx.fillText("Tumor size: "+tumorSize.toFixed(1),20,20);
+  ctx.fillText("Blood vessels: "+vessels.length,20,40);
+}
+setInterval(updateCancer,30);
+
+</script>
 </body>
 </html>
+
 
 
 
