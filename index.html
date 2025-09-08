@@ -25,7 +25,8 @@
       position: absolute;
       left: 10px;
       top: 0;
-      height: 50px;
+      height: 3.5cm; /* logo height fixed at 3.5 cm */
+      width: auto;
     }
     #header {
       font-size: 24px;
@@ -80,7 +81,10 @@
 </head>
 <body>
   <div id="topbar">
-    <img id="logo" src="Software logo.png" alt="Logo">
+    <!-- Inline SVG logo (DNA helix shape) -->
+    <svg id="logo" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#20B2AA" d="M128 64c0 97.2 78.8 176 176 176s176-78.8 176-176h-64c0 61.9-50.1 112-112 112s-112-50.1-112-112H128zm256 384c0-97.2-78.8-176-176-176S32 350.8 32 448h64c0-61.9 50.1-112 112-112s112 50.1 112 112h64z"/>
+    </svg>
     <div id="header">CANCER METASTASIS BY BioAI</div>
   </div>
 
@@ -240,6 +244,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
