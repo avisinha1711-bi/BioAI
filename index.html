@@ -280,6 +280,11 @@
             border-radius: 8px;
             font-weight: bold;
         }
+        
+        .placeholder {
+            color: #999;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -337,13 +342,7 @@
         
         <div class="visualization">
             <div class="dna-strand" id="dna-visualization">
-                <div class="base a">A</div>
-                <div class="bond"></div>
-                <div class="base t">T</div>
-                <div class="bond"></div>
-                <div class="base c">C</div>
-                <div class="bond"></div>
-                <div class="base g">G</div>
+                <div class="placeholder">DNA Sequence</div>
             </div>
             
             <div class="arrow">
@@ -351,13 +350,7 @@
             </div>
             
             <div class="dna-strand" id="mrna-visualization">
-                <div class="base u">U</div>
-                <div class="bond"></div>
-                <div class="base a">A</div>
-                <div class="bond"></div>
-                <div class="base g">G</div>
-                <div class="bond"></div>
-                <div class="base c">C</div>
+                <div class="placeholder">mRNA Sequence</div>
             </div>
             
             <div class="arrow">
@@ -365,9 +358,7 @@
             </div>
             
             <div class="protein" id="protein-visualization">
-                <div class="result-title">Met</div>
-                <div class="result-title">Leu</div>
-                <div class="result-title">Val</div>
+                <div class="placeholder">Protein</div>
             </div>
         </div>
         
@@ -516,7 +507,13 @@
                 mRNAVisualization.innerHTML = '';
                 proteinVisualization.innerHTML = '';
                 
-                if (!seq) return;
+                if (!seq) {
+                    // Add placeholders if no sequence
+                    dnaVisualization.innerHTML = '<div class="placeholder">DNA Sequence</div>';
+                    mRNAVisualization.innerHTML = '<div class="placeholder">mRNA Sequence</div>';
+                    proteinVisualization.innerHTML = '<div class="placeholder">Protein</div>';
+                    return;
+                }
                 
                 // Create DNA visualization (max 6 bases for display)
                 const displaySeq = seq.substring(0, 6);
@@ -584,11 +581,13 @@
                 // Validate input
                 if (!dnaSequence) {
                     alert('Please enter a DNA sequence.');
+                    updateVisualization(null);
                     return;
                 }
                 
                 if (!/^[ATCG]+$/.test(dnaSequence)) {
                     alert('DNA sequence can only contain A, T, C, or G.');
+                    updateVisualization(null);
                     return;
                 }
                 
@@ -616,13 +615,13 @@
                 updateVisualization(dnaSequence);
             });
             
-            // Example sequence on load
-            dnaInput.value = "TACGAATTCTAGCATGAC";
-            translateBtn.click();
+            // Initialize with empty visualization
+            updateVisualization(null);
         });
     </script>
 </body>
 </html>
+
 
 
 
