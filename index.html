@@ -272,6 +272,14 @@
             border-radius: 3px;
             color: #2d3436;
         }
+        
+        .molecular-weight {
+            margin-top: 15px;
+            padding: 10px;
+            background: #e8f4fc;
+            border-radius: 8px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -322,6 +330,7 @@
                         <i class="fas fa-link"></i> Polypeptide Chain
                     </div>
                     <div class="result-content" id="polypeptide-chain">-</div>
+                    <div class="molecular-weight" id="molecular-weight">Molecular Weight: -</div>
                 </div>
             </div>
         </div>
@@ -364,17 +373,6 @@
         
         <div class="info-section">
             <div class="info-card">
-                <h3><i class="fas fa-info-circle"></i> How It Works</h3>
-                <ul>
-                    <li>Enter a DNA sequence in the 3' to 5' direction</li>
-                    <li>The system generates the complementary DNA strand</li>
-                    <li>Transcription creates mRNA (A→U, T→A, G→C, C→G)</li>
-                    <li>Translation converts mRNA codons to amino acids</li>
-                    <li>Stop codons (UAA, UAG, UGA) terminate translation</li>
-                </ul>
-            </div>
-            
-            <div class="info-card">
                 <h3><i class="fas fa-dna"></i> Genetic Code</h3>
                 <ul>
                     <li><span class="highlight">Adenine (A)</span> pairs with <span class="highlight">Thymine (T)</span> in DNA</li>
@@ -395,11 +393,21 @@
                     <li>AI-powered genetic analysis</li>
                 </ul>
             </div>
+            
+            <div class="info-card">
+                <h3><i class="fas fa-weight"></i> Molecular Weight Calculation</h3>
+                <ul>
+                    <li>Calculated for the polypeptide chain</li>
+                    <li>Accounts for water loss in peptide bonds</li>
+                    <li>Based on standard amino acid molecular weights</li>
+                    <li>Displayed in Daltons (Da)</li>
+                </ul>
+            </div>
         </div>
         
         <footer>
             <p>BioAI Genetic Translator | Advanced DNA to Protein Conversion Tool</p>
-            <p>© 2023 BioAI Research Group</p>
+            <p>© 2025 BioAI Research, Avi Sinha</p>
         </footer>
     </div>
 
@@ -411,6 +419,7 @@
             const complementaryDNA = document.getElementById('complementary-dna');
             const mRNA = document.getElementById('mrna-sequence');
             const polypeptide = document.getElementById('polypeptide-chain');
+            const molecularWeight = document.getElementById('molecular-weight');
             
             // Genetic code mapping
             const geneticCode = {
@@ -430,6 +439,15 @@
                 "CGU": "Arg", "CGC": "Arg", "CGA": "Arg", "CGG": "Arg",
                 "AGU": "Ser", "AGC": "Ser", "AGA": "Arg", "AGG": "Arg",
                 "GGU": "Gly", "GGC": "Gly", "GGA": "Gly", "GGG": "Gly"
+            };
+            
+            // Amino acid molecular weights (in Daltons)
+            const aminoAcidWeights = {
+                "Ala": 89.09, "Arg": 174.20, "Asn": 132.12, "Asp": 133.10,
+                "Cys": 121.16, "Gln": 146.15, "Glu": 147.13, "Gly": 75.07,
+                "His": 155.16, "Ile": 131.17, "Leu": 131.17, "Lys": 146.19,
+                "Met": 149.21, "Phe": 165.19, "Pro": 115.13, "Ser": 105.09,
+                "Thr": 119.12, "Trp": 204.23, "Tyr": 181.19, "Val": 117.15
             };
             
             // Function to get complementary DNA strand
@@ -464,7 +482,27 @@
                     polypeptide.push(aminoAcid);
                 }
                 
-                return polypeptide.join('-');
+                return polypeptide;
+            }
+            
+            // Function to calculate molecular weight of polypeptide
+            function calculateMolecularWeight(aminoAcids) {
+                // Remove STOP codon if present
+                const filteredAminoAcids = aminoAcids.filter(aa => aa !== "STOP");
+                
+                if (filteredAminoAcids.length === 0) return 0;
+                
+                // Calculate total weight of amino acids
+                let totalWeight = 0;
+                for (const aa of filteredAminoAcids) {
+                    totalWeight += aminoAcidWeights[aa];
+                }
+                
+                // Subtract water loss from peptide bond formation (18.015 Da per bond)
+                // Number of bonds = number of amino acids - 1
+                const waterLoss = 18.015 * (filteredAminoAcids.length - 1);
+                
+                return totalWeight - waterLoss;
             }
             
             // Update visualization
@@ -516,10 +554,9 @@
                 
                 // Create protein visualization (first 3 amino acids)
                 const proteinSeq = translateToPolypeptide(mRNAseq);
-                const aminoAcids = proteinSeq.split('-');
                 
-                for (let i = 0; i < Math.min(3, aminoAcids.length); i++) {
-                    const aa = aminoAcids[i];
+                for (let i = 0; i < Math.min(3, proteinSeq.length); i++) {
+                    const aa = proteinSeq[i];
                     const aaEl = document.createElement('div');
                     aaEl.className = 'result-title';
                     
@@ -542,6 +579,7 @@
                 complementaryDNA.textContent = '-';
                 mRNA.textContent = '-';
                 polypeptide.textContent = '-';
+                molecularWeight.textContent = 'Molecular Weight: -';
                 
                 // Validate input
                 if (!dnaSequence) {
@@ -561,13 +599,18 @@
                 const mRNAseq = transcribeToMRNA(complementary);
                 
                 // Translate to polypeptide chain
-                const protein = translateToPolypeptide(mRNAseq);
+                const proteinArray = translateToPolypeptide(mRNAseq);
+                const proteinString = proteinArray.join('-');
+                
+                // Calculate molecular weight
+                const weight = calculateMolecularWeight(proteinArray);
                 
                 // Update results
                 templateDNA.textContent = dnaSequence;
                 complementaryDNA.textContent = complementary;
                 mRNA.textContent = mRNAseq;
-                polypeptide.textContent = protein;
+                polypeptide.textContent = proteinString;
+                molecularWeight.textContent = `Molecular Weight: ${weight.toFixed(2)} Da`;
                 
                 // Update visualization
                 updateVisualization(dnaSequence);
@@ -580,6 +623,7 @@
     </script>
 </body>
 </html>
+
 
 
 
