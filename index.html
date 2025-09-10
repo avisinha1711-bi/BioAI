@@ -448,7 +448,9 @@
             }
             
             // Function to transcribe DNA to mRNA
+            // This function now correctly handles the transcription from 3' to 5' DNA to mRNA
             function transcribeToMRNA(sequence) {
+                // For 3' to 5' DNA template, we need to create a complementary mRNA strand
                 const transcriptionMap = { 'A': 'U', 'T': 'A', 'C': 'G', 'G': 'C' };
                 return sequence.split('').map(base => transcriptionMap[base]).join('');
             }
@@ -532,8 +534,7 @@
                 }
                 
                 // Create mRNA visualization
-                const complementary = getComplementaryDNA(displaySeq);
-                const mRNAseq = transcribeToMRNA(complementary);
+                const mRNAseq = transcribeToMRNA(displaySeq);
                 
                 for (let i = 0; i < mRNAseq.length; i++) {
                     const base = mRNAseq[i];
@@ -595,7 +596,8 @@
                 const complementary = getComplementaryDNA(dnaSequence);
                 
                 // Transcribe to mRNA (5' to 3')
-                const mRNAseq = transcribeToMRNA(complementary);
+                // For 3' to 5' DNA template, mRNA is complementary to the template
+                const mRNAseq = transcribeToMRNA(dnaSequence);
                 
                 // Translate to polypeptide chain
                 const proteinArray = translateToPolypeptide(mRNAseq);
@@ -621,6 +623,7 @@
     </script>
 </body>
 </html>
+
 
 
 
