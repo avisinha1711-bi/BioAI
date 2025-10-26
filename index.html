@@ -13,9 +13,23 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary: #4fc3f7;
+            --primary-dark: #29b6f6;
+            --secondary: #9c27b0;
+            --accent: #00e5ff;
+            --bg-dark: #0a0e17;
+            --bg-card: rgba(18, 25, 40, 0.9);
+            --text-light: #e0e0e0;
+            --text-lighter: #bbdefb;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+        }
+        
         body {
-            background-color: #0a0e17;
-            color: #e0e0e0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
@@ -23,38 +37,27 @@
             overflow-x: hidden;
         }
         
-        /* Subtle connected dots background */
-        body::before {
-            content: '';
+        /* Animated DNA Helix Background */
+        .dna-helix {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: -2;
+            opacity: 0.03;
             background-image: 
-                radial-gradient(circle at 25% 25%, rgba(25, 118, 210, 0.08) 1px, transparent 0),
-                radial-gradient(circle at 75% 75%, rgba(76, 175, 80, 0.05) 1px, transparent 0),
-                radial-gradient(circle at 50% 10%, rgba(156, 39, 176, 0.05) 1px, transparent 0),
-                radial-gradient(circle at 10% 50%, rgba(255, 152, 0, 0.05) 1px, transparent 0),
-                radial-gradient(circle at 90% 50%, rgba(0, 188, 212, 0.05) 1px, transparent 0);
-            background-size: 300px 300px, 400px 400px, 500px 500px, 600px 600px, 700px 700px;
-            background-position: 0 0, 100px 100px, 200px 200px, 300px 300px, 400px 400px;
-            z-index: -1;
+                radial-gradient(circle at 20% 50%, var(--primary) 2px, transparent 2.5px),
+                radial-gradient(circle at 40% 20%, var(--secondary) 2px, transparent 2.5px),
+                radial-gradient(circle at 60% 80%, var(--accent) 2px, transparent 2.5px),
+                radial-gradient(circle at 80% 30%, var(--primary) 2px, transparent 2.5px);
+            background-size: 400px 400px;
+            animation: float 20s infinite linear;
         }
         
-        /* Connecting lines effect */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(90deg, transparent 99%, rgba(25, 118, 210, 0.05) 100%),
-                linear-gradient(0deg, transparent 99%, rgba(76, 175, 80, 0.05) 100%);
-            background-size: 30px 30px;
-            z-index: -1;
+        @keyframes float {
+            0% { background-position: 0 0, 100px 150px, 200px 300px, 300px 50px; }
+            100% { background-position: 400px 400px, 500px 550px, 600px 700px, 700px 450px; }
         }
         
         .container {
@@ -68,34 +71,67 @@
             text-align: center;
             padding: 30px 0;
             color: white;
+            position: relative;
+        }
+        
+        .header-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.1;
+            z-index: -1;
+            border-radius: 50%;
         }
         
         header h1 {
-            font-size: 3.2rem; /* Increased from 2.5rem */
+            font-size: 3.5rem; /* Increased size */
             margin-bottom: 10px;
-            color: #e0e0e0;
-            font-weight: 400;
+            color: var(--text-light);
+            font-weight: 300;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
         }
         
         header p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto;
             opacity: 0.8;
         }
         
         .card {
-            background: rgba(18, 25, 40, 0.9);
-            border-radius: 10px;
-            padding: 25px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
             border: 1px solid rgba(79, 195, 247, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
         
         .card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
         }
         
         .input-section {
@@ -103,11 +139,26 @@
             flex-direction: column;
         }
         
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
         label {
             font-weight: 600;
             margin-bottom: 10px;
-            color: #bbdefb;
+            color: var(--text-lighter);
             font-size: 1.1rem;
+        }
+        
+        .sequence-counter {
+            background: rgba(79, 195, 247, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-lighter);
         }
         
         .input-group {
@@ -118,43 +169,72 @@
         
         input {
             flex: 1;
-            padding: 15px;
+            padding: 18px;
             background: rgba(30, 40, 60, 0.8);
-            border: 1px solid rgba(79, 195, 247, 0.2);
-            border-radius: 6px;
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s;
-            color: #e0e0e0;
+            transition: all 0.3s;
+            color: var(--text-light);
+            font-family: 'Courier New', monospace;
         }
         
         input:focus {
-            border-color: #4fc3f7;
+            border-color: var(--primary);
             outline: none;
+            box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.2);
+        }
+        
+        .input-actions {
+            display: flex;
+            gap: 10px;
         }
         
         button {
-            background: #4fc3f7;
+            background: var(--primary);
             color: white;
             border: none;
             padding: 15px 25px;
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         button:hover {
-            background: #29b6f6;
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 182, 246, 0.4);
+        }
+        
+        button.secondary {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        button.secondary:hover {
+            background: rgba(79, 195, 247, 0.1);
         }
         
         .complementary-preview {
             background: rgba(30, 40, 60, 0.8);
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 15px;
-            border-left: 3px solid #4fc3f7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary);
             display: none;
+            animation: fadeIn 0.5s ease;
+            position: relative;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .complementary-preview.show {
@@ -163,8 +243,8 @@
         
         .complementary-preview-title {
             font-weight: 600;
-            color: #bbdefb;
-            margin-bottom: 8px;
+            color: var(--text-lighter);
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -173,73 +253,147 @@
         .complementary-preview-content {
             font-family: 'Courier New', monospace;
             background: rgba(40, 50, 70, 0.8);
-            padding: 12px;
-            border-radius: 4px;
+            padding: 15px;
+            border-radius: 8px;
             overflow-x: auto;
             font-size: 1.1rem;
-            color: #e0e0e0;
+            color: var(--text-light);
+            border: 1px solid rgba(79, 195, 247, 0.2);
         }
         
         .results {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
             margin-top: 20px;
         }
         
         .result-box {
             background: rgba(30, 40, 60, 0.8);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 3px solid #4fc3f7;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(79, 195, 247, 0.05), transparent);
+            z-index: -1;
+        }
+        
+        .result-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
         .result-title {
             font-weight: 600;
-            color: #bbdefb;
-            margin-bottom: 10px;
+            color: var(--text-lighter);
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-size: 1.1rem;
         }
         
         .result-content {
             font-family: 'Courier New', monospace;
             background: rgba(40, 50, 70, 0.8);
-            padding: 15px;
-            border-radius: 6px;
+            padding: 18px;
+            border-radius: 8px;
             overflow-x: auto;
             font-size: 1.1rem;
-            color: #e0e0e0;
+            color: var(--text-light);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(79, 195, 247, 0.1);
         }
         
         .visualization {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(18, 25, 40, 0.9);
-            border-radius: 10px;
+            margin: 40px 0;
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: 16px;
             border: 1px solid rgba(79, 195, 247, 0.1);
+            position: relative;
+        }
+        
+        .visualization::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .process-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-icon {
+            width: 60px; /* Smaller for mobile */
+            height: 60px; /* Smaller for mobile */
+            background: rgba(79, 195, 247, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem; /* Smaller for mobile */
+            color: var(--primary);
+            border: 2px solid rgba(79, 195, 247, 0.3);
+        }
+        
+        .step-label {
+            font-weight: 600;
+            color: var(--text-lighter);
+            margin-bottom: 10px;
+            font-size: 0.9rem; /* Smaller for mobile */
         }
         
         .dna-strand {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 6px; /* Smaller for mobile */
+            min-height: 150px; /* Smaller for mobile */
+            justify-content: center;
         }
         
         .base {
-            width: 40px;
-            height: 40px;
+            width: 35px; /* Smaller for mobile */
+            height: 35px; /* Smaller for mobile */
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 50%;
             font-weight: bold;
             color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            font-size: 0.9rem; /* Smaller for mobile */
+        }
+        
+        .base:hover {
+            transform: scale(1.1);
         }
         
         .a { background: #FF6B6B; }
@@ -249,37 +403,69 @@
         .u { background: #9b59b6; }
         
         .bond {
-            width: 2px;
-            height: 20px;
-            background: #4fc3f7;
-            opacity: 0.5;
+            width: 2px; /* Smaller for mobile */
+            height: 18px; /* Smaller for mobile */
+            background: var(--primary);
+            opacity: 0.6;
         }
         
         .arrow {
-            font-size: 1.8rem;
-            color: #4fc3f7;
-            margin: 0 20px;
+            font-size: 1.5rem; /* Smaller for mobile */
+            color: var(--primary);
+            margin: 0 15px; /* Smaller for mobile */
+            opacity: 0.7;
+        }
+        
+        .protein-info {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-lighter);
+            background: rgba(79, 195, 247, 0.1);
+            padding: 5px 10px;
+            border-radius: 10px;
         }
         
         .info-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
             margin-top: 40px;
         }
         
         .info-card {
-            background: rgba(18, 25, 40, 0.9);
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 12px;
             border: 1px solid rgba(79, 195, 247, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         
         .info-card h3 {
-            color: #bbdefb;
-            margin-bottom: 15px;
+            color: var(--text-lighter);
+            margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #4fc3f7;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
         }
         
         .info-card ul {
@@ -287,25 +473,27 @@
         }
         
         .info-card li {
-            margin-bottom: 10px;
-            padding-left: 25px;
+            margin-bottom: 12px;
+            padding-left: 30px;
             position: relative;
         }
         
         .info-card li:before {
             content: "•";
-            color: #4fc3f7;
+            color: var(--primary);
             font-weight: bold;
             position: absolute;
-            left: 10px;
+            left: 15px;
+            font-size: 1.2rem;
         }
         
         footer {
             text-align: center;
-            margin-top: 50px;
-            color: #bbdefb;
-            padding: 20px;
-            opacity: 0.7;
+            margin-top: 60px;
+            color: var(--text-lighter);
+            padding: 30px;
+            opacity: 0.8;
+            border-top: 1px solid rgba(79, 195, 247, 0.2);
         }
         
         @media (max-width: 768px) {
@@ -313,9 +501,18 @@
                 flex-direction: column;
             }
             
+            .input-actions {
+                width: 100%;
+            }
+            
+            .input-actions button {
+                flex: 1;
+            }
+            
             .visualization {
                 flex-direction: column;
                 gap: 30px;
+                padding: 20px;
             }
             
             .arrow {
@@ -324,61 +521,131 @@
             }
             
             header h1 {
-                font-size: 2.5rem; /* Slightly smaller on mobile */
+                font-size: 2.8rem; /* Adjusted for mobile */
+            }
+            
+            .process-step {
+                width: 100%;
+            }
+            
+            .dna-strand {
+                flex-direction: row;
+                min-height: auto;
+                gap: 10px;
+            }
+            
+            .bond {
+                width: 15px;
+                height: 2px;
             }
         }
         
         .highlight {
             background: rgba(255, 234, 167, 0.2);
-            padding: 2px 5px;
-            border-radius: 3px;
+            padding: 3px 6px;
+            border-radius: 4px;
             color: #ffeaa7;
         }
         
         .stop-codon {
             background: #ff7675;
             color: white;
-            padding: 2px 5px;
-            border-radius: 3px;
+            padding: 3px 6px;
+            border-radius: 4px;
         }
         
         .start-codon {
             background: #55efc4;
-            padding: 2px 5px;
-            border-radius: 3px;
+            padding: 3px 6px;
+            border-radius: 4px;
             color: #2d3436;
         }
         
         .molecular-weight {
             margin-top: 15px;
-            padding: 10px;
+            padding: 12px;
             background: rgba(79, 195, 247, 0.1);
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
-            color: #bbdefb;
+            color: var(--text-lighter);
+            border-left: 3px solid var(--primary);
         }
         
         .placeholder {
             color: #7e8a9a;
             font-style: italic;
         }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.4s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--success);
+        }
+        
+        .notification.error {
+            background: var(--error);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <div class="dna-helix"></div>
+    
     <div class="container">
         <header>
+            <div class="header-glow"></div>
             <h1>GenefloAI Genetic Translator</h1>
             <p>Translate DNA sequences to mRNA and polypeptide chains using AI-powered algorithms</p>
         </header>
         
         <div class="card">
             <div class="input-section">
-                <label for="dna-sequence"><i class="fas fa-dna"></i> Enter DNA Template Strand (3' to 5'):</label>
+                <div class="input-header">
+                    <label for="dna-sequence"><i class="fas fa-dna"></i> Enter DNA Template Strand (3' to 5'):</label>
+                    <div class="sequence-counter">
+                        <span id="base-count">0</span> bases
+                    </div>
+                </div>
+                
                 <div class="input-group">
                     <input type="text" id="dna-sequence" placeholder="e.g., TACGAATTCTAGCATGAC">
-                    <button id="translate-btn">
-                        <i class="fas fa-code"></i> Translate
-                    </button>
+                    <div class="input-actions">
+                        <button id="translate-btn">
+                            <i class="fas fa-code"></i> Translate
+                        </button>
+                        <button class="secondary" id="clear-btn">
+                            <i class="fas fa-eraser"></i> Clear
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Real-time complementary strand preview -->
@@ -423,24 +690,43 @@
         </div>
         
         <div class="visualization">
-            <div class="dna-strand" id="dna-visualization">
-                <div class="placeholder">DNA Sequence</div>
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-dna"></i>
+                </div>
+                <div class="step-label">DNA Template</div>
+                <div class="dna-strand" id="dna-visualization">
+                    <div class="placeholder">Enter sequence</div>
+                </div>
             </div>
             
             <div class="arrow">
                 <i class="fas fa-arrow-right"></i>
             </div>
             
-            <div class="dna-strand" id="mrna-visualization">
-                <div class="placeholder">mRNA Sequence</div>
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-rna"></i>
+                </div>
+                <div class="step-label">mRNA</div>
+                <div class="dna-strand" id="mrna-visualization">
+                    <div class="placeholder">Transcription</div>
+                </div>
             </div>
             
             <div class="arrow">
                 <i class="fas fa-arrow-right"></i>
             </div>
             
-            <div class="protein" id="protein-visualization">
-                <div class="placeholder">Protein</div>
+            <div class="process-step">
+                <div class="step-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <div class="step-label">Protein</div>
+                <div class="dna-strand" id="protein-visualization">
+                    <div class="placeholder">Translation</div>
+                </div>
+                <div class="protein-info" id="protein-info">Peptide length: 0</div>
             </div>
         </div>
         
@@ -484,9 +770,12 @@
         </footer>
     </div>
 
+    <div class="notification" id="notification"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const translateBtn = document.getElementById('translate-btn');
+            const clearBtn = document.getElementById('clear-btn');
             const dnaInput = document.getElementById('dna-sequence');
             const templateDNA = document.getElementById('template-dna');
             const complementaryDNA = document.getElementById('complementary-dna');
@@ -495,6 +784,9 @@
             const molecularWeight = document.getElementById('molecular-weight');
             const complementaryPreview = document.getElementById('complementary-preview');
             const complementaryPreviewContent = document.getElementById('complementary-preview-content');
+            const baseCount = document.getElementById('base-count');
+            const notification = document.getElementById('notification');
+            const proteinInfo = document.getElementById('protein-info');
             
             // Genetic code mapping
             const geneticCode = {
@@ -525,6 +817,16 @@
                 "Thr": 119.12, "Trp": 204.23, "Tyr": 181.19, "Val": 117.15
             };
             
+            // Show notification
+            function showNotification(message, type = 'success') {
+                notification.textContent = message;
+                notification.className = `notification ${type} show`;
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
             // Function to get complementary DNA strand
             function getComplementaryDNA(sequence) {
                 const complementMap = { 'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C' };
@@ -532,9 +834,7 @@
             }
             
             // Function to transcribe DNA to mRNA
-            // This function now correctly handles the transcription from 3' to 5' DNA to mRNA
             function transcribeToMRNA(sequence) {
-                // For 3' to 5' DNA template, we need to create a complementary mRNA strand
                 const transcriptionMap = { 'A': 'U', 'T': 'A', 'C': 'G', 'G': 'C' };
                 return sequence.split('').map(base => transcriptionMap[base]).join('');
             }
@@ -583,7 +883,7 @@
             }
             
             // Update visualization
-            function updateVisualization(seq) {
+            function updateVisualization(seq, proteinArray) {
                 const dnaVisualization = document.getElementById('dna-visualization');
                 const mRNAVisualization = document.getElementById('mrna-visualization');
                 const proteinVisualization = document.getElementById('protein-visualization');
@@ -595,14 +895,15 @@
                 
                 if (!seq) {
                     // Add placeholders if no sequence
-                    dnaVisualization.innerHTML = '<div class="placeholder">DNA Sequence</div>';
-                    mRNAVisualization.innerHTML = '<div class="placeholder">mRNA Sequence</div>';
-                    proteinVisualization.innerHTML = '<div class="placeholder">Protein</div>';
+                    dnaVisualization.innerHTML = '<div class="placeholder">Enter sequence</div>';
+                    mRNAVisualization.innerHTML = '<div class="placeholder">Transcription</div>';
+                    proteinVisualization.innerHTML = '<div class="placeholder">Translation</div>';
+                    proteinInfo.textContent = 'Peptide length: 0';
                     return;
                 }
                 
-                // Create DNA visualization (max 6 bases for display)
-                const displaySeq = seq.substring(0, 6);
+                // Create DNA visualization (max 4 bases for display on mobile)
+                const displaySeq = seq.substring(0, window.innerWidth < 768 ? 4 : 6);
                 for (let i = 0; i < displaySeq.length; i++) {
                     const base = displaySeq[i];
                     const baseEl = document.createElement('div');
@@ -634,23 +935,35 @@
                     }
                 }
                 
-                // Create protein visualization (first 3 amino acids)
-                const proteinSeq = translateToPolypeptide(mRNAseq);
-                
-                for (let i = 0; i < Math.min(3, proteinSeq.length); i++) {
-                    const aa = proteinSeq[i];
+                // Create protein visualization (first 2-3 amino acids)
+                const displayProteinCount = window.innerWidth < 768 ? 2 : 3;
+                for (let i = 0; i < Math.min(displayProteinCount, proteinArray.length); i++) {
+                    const aa = proteinArray[i];
                     const aaEl = document.createElement('div');
-                    aaEl.className = 'result-title';
+                    aaEl.className = 'base';
                     
                     if (aa === "STOP") {
                         aaEl.classList.add('stop-codon');
+                        aaEl.textContent = "STP";
                     } else if (aa === "Met" && i === 0) {
                         aaEl.classList.add('start-codon');
+                        aaEl.textContent = aa.substring(0, 3);
+                    } else {
+                        aaEl.textContent = aa.substring(0, 3);
                     }
                     
-                    aaEl.textContent = aa;
                     proteinVisualization.appendChild(aaEl);
+                    
+                    if (i < Math.min(displayProteinCount, proteinArray.length) - 1) {
+                        const bond = document.createElement('div');
+                        bond.className = 'bond';
+                        proteinVisualization.appendChild(bond);
+                    }
                 }
+                
+                // Update protein info
+                const peptideLength = proteinArray.filter(aa => aa !== "STOP").length;
+                proteinInfo.textContent = `Peptide length: ${peptideLength}`;
             }
             
             // Update complementary strand preview in real-time
@@ -662,6 +975,11 @@
                 } else {
                     complementaryPreview.classList.remove('show');
                 }
+            }
+            
+            // Update base counter
+            function updateBaseCounter(sequence) {
+                baseCount.textContent = sequence.length;
             }
             
             // Event listener for real-time input
@@ -676,10 +994,32 @@
                 
                 // Update complementary preview
                 updateComplementaryPreview(dnaInput.value.toUpperCase().trim());
+                
+                // Update base counter
+                updateBaseCounter(dnaInput.value);
+            });
+            
+            // Clear button functionality
+            clearBtn.addEventListener('click', function() {
+                dnaInput.value = '';
+                templateDNA.textContent = '-';
+                complementaryDNA.textContent = '-';
+                mRNA.textContent = '-';
+                polypeptide.textContent = '-';
+                molecularWeight.textContent = 'Molecular Weight: -';
+                complementaryPreview.classList.remove('show');
+                updateBaseCounter('');
+                updateVisualization(null, []);
+                showNotification('Cleared all data');
             });
             
             translateBtn.addEventListener('click', function() {
                 const dnaSequence = dnaInput.value.toUpperCase().trim();
+                
+                // Show loading state
+                const originalText = translateBtn.innerHTML;
+                translateBtn.innerHTML = '<div class="loading"></div> Translating...';
+                translateBtn.disabled = true;
                 
                 // Reset previous results
                 templateDNA.textContent = '-';
@@ -690,44 +1030,54 @@
                 
                 // Validate input
                 if (!dnaSequence) {
-                    alert('Please enter a DNA sequence.');
-                    updateVisualization(null);
+                    showNotification('Please enter a DNA sequence.', 'error');
+                    translateBtn.innerHTML = originalText;
+                    translateBtn.disabled = false;
                     return;
                 }
                 
                 if (!/^[ATCG]+$/.test(dnaSequence)) {
-                    alert('DNA sequence can only contain A, T, C, or G.');
-                    updateVisualization(null);
+                    showNotification('DNA sequence can only contain A, T, C, or G.', 'error');
+                    translateBtn.innerHTML = originalText;
+                    translateBtn.disabled = false;
                     return;
                 }
                 
-                // Get complementary DNA (5' to 3')
-                const complementary = getComplementaryDNA(dnaSequence);
-                
-                // Transcribe to mRNA (5' to 3')
-                // For 3' to 5' DNA template, mRNA is complementary to the template
-                const mRNAseq = transcribeToMRNA(dnaSequence);
-                
-                // Translate to polypeptide chain
-                const proteinArray = translateToPolypeptide(mRNAseq);
-                const proteinString = proteinArray.join('-');
-                
-                // Calculate molecular weight
-                const weight = calculateMolecularWeight(proteinArray);
-                
-                // Update results
-                templateDNA.textContent = dnaSequence;
-                complementaryDNA.textContent = complementary;
-                mRNA.textContent = mRNAseq;
-                polypeptide.textContent = proteinString;
-                molecularWeight.textContent = `Molecular Weight: ${weight.toFixed(2)} Da`;
-                
-                // Update visualization
-                updateVisualization(dnaSequence);
+                // Simulate processing delay for better UX
+                setTimeout(() => {
+                    // Get complementary DNA (5' to 3')
+                    const complementary = getComplementaryDNA(dnaSequence);
+                    
+                    // Transcribe to mRNA (5' to 3')
+                    const mRNAseq = transcribeToMRNA(dnaSequence);
+                    
+                    // Translate to polypeptide chain
+                    const proteinArray = translateToPolypeptide(mRNAseq);
+                    const proteinString = proteinArray.join('-');
+                    
+                    // Calculate molecular weight
+                    const weight = calculateMolecularWeight(proteinArray);
+                    
+                    // Update results
+                    templateDNA.textContent = dnaSequence;
+                    complementaryDNA.textContent = complementary;
+                    mRNA.textContent = mRNAseq;
+                    polypeptide.textContent = proteinString;
+                    molecularWeight.textContent = `Molecular Weight: ${weight.toFixed(2)} Da`;
+                    
+                    // Update visualization
+                    updateVisualization(dnaSequence, proteinArray);
+                    
+                    // Reset button
+                    translateBtn.innerHTML = originalText;
+                    translateBtn.disabled = false;
+                    
+                    showNotification('Translation completed successfully!');
+                }, 800);
             });
             
             // Initialize with empty visualization
-            updateVisualization(null);
+            updateVisualization(null, []);
         });
     </script>
 </body>
