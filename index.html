@@ -10,21 +10,24 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
         :root {
-            --primary: #4fc3f7;
-            --primary-dark: #29b6f6;
-            --secondary: #9c27b0;
-            --accent: #00e5ff;
-            --bg-dark: #0a0e17;
-            --bg-card: rgba(18, 25, 40, 0.9);
-            --text-light: #e0e0e0;
-            --text-lighter: #bbdefb;
-            --success: #4caf50;
-            --warning: #ff9800;
-            --error: #f44336;
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --accent: #06b6d4;
+            --bg-dark: #0a0f1a;
+            --bg-card: #1a2235;
+            --text-light: #f8fafc;
+            --text-lighter: #cbd5e1;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --border: #2d3748;
         }
         
         body {
@@ -37,83 +40,30 @@
             overflow-x: hidden;
         }
         
-        /* Atomic Animation */
-        .atomic-animation {
+        /* Network lines background - Increased visibility */
+        .network-background {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 500px;
-            height: 500px;
-            z-index: -1;
-            opacity: 0.05;
-        }
-        
-        .nucleus {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle, var(--primary) 0%, var(--secondary) 100%);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 30px rgba(79, 195, 247, 0.3);
-        }
-        
-        .nucleus-core {
-            width: 30px;
-            height: 30px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
-        }
-        
-        .orbit {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            border: 1px solid rgba(79, 195, 247, 0.3);
-        }
-        
-        .orbit-1 {
-            width: 200px;
-            height: 200px;
-            animation: rotate 20s linear infinite;
-        }
-        
-        .orbit-2 {
-            width: 300px;
-            height: 300px;
-            animation: rotate 25s linear infinite reverse;
-        }
-        
-        .orbit-3 {
-            width: 400px;
-            height: 400px;
-            animation: rotate 30s linear infinite;
-        }
-        
-        .electron {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--accent);
-            border-radius: 50%;
             top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.08; /* Increased from 0.03 */
         }
         
-        @keyframes rotate {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        .network-dot {
+            position: absolute;
+            width: 3px; /* Increased from 2px */
+            height: 3px; /* Increased from 2px */
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .network-line {
+            position: absolute;
+            background: white;
+            height: 1px;
+            transform-origin: left center;
         }
         
         .container {
@@ -125,25 +75,25 @@
         
         header {
             text-align: center;
-            padding: 30px 0;
+            padding: 40px 0 30px;
             color: white;
             position: relative;
         }
         
         header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            color: white; /* Changed to white */
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            color: var(--text-light);
             font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: -0.5px;
         }
         
         header p {
-            font-size: 1.2rem;
-            max-width: 800px;
+            font-size: 1.1rem;
+            max-width: 600px;
             margin: 0 auto;
-            opacity: 0.8;
+            color: var(--text-muted);
+            font-weight: 400;
         }
         
         .card {
@@ -151,27 +101,15 @@
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
-            border: 1px solid rgba(79, 195, 247, 0.1);
-            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
             position: relative;
             overflow: hidden;
         }
         
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
-        }
-        
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
         }
         
         .input-section {
@@ -183,7 +121,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         label {
@@ -194,11 +132,12 @@
         }
         
         .sequence-counter {
-            background: rgba(79, 195, 247, 0.2);
-            padding: 5px 10px;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--text-lighter);
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            font-weight: 500;
         }
         
         .input-group {
@@ -209,35 +148,35 @@
         
         input {
             flex: 1;
-            padding: 18px;
-            background: rgba(30, 40, 60, 0.8);
-            border: 1px solid rgba(79, 195, 247, 0.3);
+            padding: 16px 20px;
+            background: rgba(26, 34, 53, 0.7);
+            border: 1px solid var(--border);
             border-radius: 10px;
             font-size: 16px;
             transition: all 0.3s;
             color: var(--text-light);
-            font-family: 'Courier New', monospace;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
         }
         
         input:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.2);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
         .input-actions {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         
         button {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 15px 25px;
+            padding: 14px 24px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             transition: all 0.3s;
             display: flex;
@@ -248,21 +187,21 @@
         button:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(41, 182, 246, 0.4);
         }
         
         button.secondary {
             background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
+            border: 1px solid var(--border);
+            color: var(--text-lighter);
         }
         
         button.secondary:hover {
-            background: rgba(79, 195, 247, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary-light);
         }
         
         .complementary-preview {
-            background: rgba(30, 40, 60, 0.8);
+            background: rgba(26, 34, 53, 0.7);
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
@@ -288,17 +227,18 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.95rem;
         }
         
         .complementary-preview-content {
-            font-family: 'Courier New', monospace;
-            background: rgba(40, 50, 70, 0.8);
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            background: rgba(45, 55, 72, 0.5);
             padding: 15px;
             border-radius: 8px;
             overflow-x: auto;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-light);
-            border: 1px solid rgba(79, 195, 247, 0.2);
+            border: 1px solid var(--border);
         }
         
         .results {
@@ -309,29 +249,19 @@
         }
         
         .result-box {
-            background: rgba(30, 40, 60, 0.8);
+            background: rgba(26, 34, 53, 0.7);
             padding: 25px;
             border-radius: 12px;
             border-left: 4px solid var(--primary);
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
-        }
-        
-        .result-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(79, 195, 247, 0.05), transparent);
-            z-index: -1;
+            border: 1px solid var(--border);
         }
         
         .result-box:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .result-title {
@@ -341,21 +271,21 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
         
         .result-content {
-            font-family: 'Courier New', monospace;
-            background: rgba(40, 50, 70, 0.8);
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            background: rgba(45, 55, 72, 0.5);
             padding: 18px;
             border-radius: 8px;
             overflow-x: auto;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--text-light);
             min-height: 60px;
             display: flex;
             align-items: center;
-            border: 1px solid rgba(79, 195, 247, 0.1);
+            border: 1px solid var(--border);
         }
         
         .visualization {
@@ -366,18 +296,8 @@
             padding: 30px;
             background: var(--bg-card);
             border-radius: 16px;
-            border: 1px solid rgba(79, 195, 247, 0.1);
+            border: 1px solid var(--border);
             position: relative;
-        }
-        
-        .visualization::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
         
         .process-step {
@@ -391,15 +311,15 @@
         .step-icon {
             width: 60px;
             height: 60px;
-            background: rgba(79, 195, 247, 0.1);
-            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 15px;
             font-size: 1.5rem;
             color: var(--primary);
-            border: 2px solid rgba(79, 195, 247, 0.3);
+            border: 1px solid var(--border);
         }
         
         .step-label {
@@ -424,29 +344,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 50%;
-            font-weight: bold;
+            border-radius: 8px;
+            font-weight: 600;
             color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: all 0.3s;
             font-size: 0.9rem;
         }
         
         .base:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         
-        .a { background: #FF6B6B; }
-        .t { background: #4ECDC4; }
-        .c { background: #FFE66D; color: #333; }
-        .g { background: #1A535C; }
-        .u { background: #9b59b6; }
+        .a { background: #ef4444; }
+        .t { background: #10b981; }
+        .c { background: #f59e0b; color: #1e293b; }
+        .g { background: #3b82f6; }
+        .u { background: #8b5cf6; }
         
         .bond {
             width: 2px;
             height: 18px;
             background: var(--primary);
-            opacity: 0.6;
+            opacity: 0.4;
         }
         
         .arrow {
@@ -459,8 +378,8 @@
         .protein-info {
             margin-top: 10px;
             font-size: 0.8rem;
-            color: var(--text-lighter);
-            background: rgba(79, 195, 247, 0.1);
+            color: var(--text-muted);
+            background: rgba(37, 99, 235, 0.1);
             padding: 5px 10px;
             border-radius: 10px;
         }
@@ -476,36 +395,26 @@
             background: var(--bg-card);
             padding: 25px;
             border-radius: 12px;
-            border: 1px solid rgba(79, 195, 247, 0.1);
+            border: 1px solid var(--border);
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
         }
         
-        .info-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-        }
-        
         .info-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
         
         .info-card h3 {
             color: var(--text-lighter);
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(79, 195, 247, 0.3);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
         }
         
         .info-card ul {
@@ -516,6 +425,7 @@
             margin-bottom: 12px;
             padding-left: 30px;
             position: relative;
+            color: var(--text-muted);
         }
         
         .info-card li:before {
@@ -530,10 +440,11 @@
         footer {
             text-align: center;
             margin-top: 60px;
-            color: var(--text-lighter);
+            color: var(--text-muted);
             padding: 30px;
             opacity: 0.8;
-            border-top: 1px solid rgba(79, 195, 247, 0.2);
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
         }
         
         @media (max-width: 768px) {
@@ -561,7 +472,7 @@
             }
             
             header h1 {
-                font-size: 2.8rem;
+                font-size: 2.2rem;
             }
             
             .process-step {
@@ -578,53 +489,33 @@
                 width: 15px;
                 height: 2px;
             }
-            
-            .atomic-animation {
-                width: 300px;
-                height: 300px;
-            }
-            
-            .orbit-1 {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .orbit-2 {
-                width: 180px;
-                height: 180px;
-            }
-            
-            .orbit-3 {
-                width: 240px;
-                height: 240px;
-            }
         }
         
         .highlight {
-            background: rgba(255, 234, 167, 0.2);
+            background: rgba(245, 158, 11, 0.1);
             padding: 3px 6px;
             border-radius: 4px;
-            color: #ffeaa7;
+            color: #f59e0b;
         }
         
         .stop-codon {
-            background: #ff7675;
+            background: #ef4444;
             color: white;
             padding: 3px 6px;
             border-radius: 4px;
         }
         
         .start-codon {
-            background: #55efc4;
+            background: #10b981;
             padding: 3px 6px;
             border-radius: 4px;
-            color: #2d3436;
+            color: white;
         }
         
         .molecular-weight {
             margin-top: 15px;
             padding: 12px;
-            background: rgba(79, 195, 247, 0.1);
+            background: rgba(37, 99, 235, 0.1);
             border-radius: 8px;
             font-weight: 600;
             color: var(--text-lighter);
@@ -632,7 +523,7 @@
         }
         
         .placeholder {
-            color: #7e8a9a;
+            color: var(--text-muted);
             font-style: italic;
         }
         
@@ -641,11 +532,11 @@
             top: 20px;
             right: 20px;
             padding: 15px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             color: white;
             font-weight: 600;
             z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transform: translateX(150%);
             transition: transform 0.4s ease;
         }
@@ -664,9 +555,9 @@
         
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,.3);
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
@@ -678,26 +569,13 @@
     </style>
 </head>
 <body>
-    <!-- Atomic Animation -->
-    <div class="atomic-animation">
-        <div class="nucleus">
-            <div class="nucleus-core"></div>
-        </div>
-        <div class="orbit orbit-1">
-            <div class="electron"></div>
-        </div>
-        <div class="orbit orbit-2">
-            <div class="electron"></div>
-        </div>
-        <div class="orbit orbit-3">
-            <div class="electron"></div>
-        </div>
-    </div>
+    <!-- Network lines background - More visible -->
+    <div class="network-background" id="network-background"></div>
     
     <div class="container">
         <header>
             <h1>GenefloAI Genetic Translator</h1>
-            <p>Translate DNA sequences to mRNA and polypeptide chains using AI-powered algorithms</p>
+            <p>Translate DNA sequences to mRNA and polypeptide chains using advanced algorithms</p>
         </header>
         
         <div class="card">
@@ -839,14 +717,65 @@
         
         <footer>
             <p>GenefloAI Genetic Translator | Advanced DNA to Protein Conversion Tool</p>
-            <p>© 2025 GenefloAI Research, Avi Sinha</p>
+            <p>© 2025 GenefloAI Research</p>
         </footer>
     </div>
 
     <div class="notification" id="notification"></div>
 
     <script>
+        // Create network background with more visibility
+        function createNetworkBackground() {
+            const container = document.getElementById('network-background');
+            const dots = [];
+            const lines = [];
+            
+            // Create more dots for better visibility
+            for (let i = 0; i < 60; i++) { // Increased from 40
+                const dot = document.createElement('div');
+                dot.className = 'network-dot';
+                dot.style.left = `${Math.random() * 100}%`;
+                dot.style.top = `${Math.random() * 100}%`;
+                container.appendChild(dot);
+                dots.push(dot);
+            }
+            
+            // Create lines between nearby dots
+            for (let i = 0; i < dots.length; i++) {
+                for (let j = i + 1; j < dots.length; j++) {
+                    const dot1 = dots[i];
+                    const dot2 = dots[j];
+                    
+                    const x1 = parseFloat(dot1.style.left);
+                    const y1 = parseFloat(dot1.style.top);
+                    const x2 = parseFloat(dot2.style.left);
+                    const y2 = parseFloat(dot2.style.top);
+                    
+                    const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                    
+                    // Connect more dots for better visibility
+                    if (distance < 25) { // Increased from 20
+                        const line = document.createElement('div');
+                        line.className = 'network-line';
+                        
+                        const length = distance;
+                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                        
+                        line.style.width = `${length}%`;
+                        line.style.left = `${x1}%`;
+                        line.style.top = `${y1}%`;
+                        line.style.transform = `rotate(${angle}deg)`;
+                        
+                        container.appendChild(line);
+                        lines.push(line);
+                    }
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            createNetworkBackground();
+            
             const translateBtn = document.getElementById('translate-btn');
             const clearBtn = document.getElementById('clear-btn');
             const dnaInput = document.getElementById('dna-sequence');
