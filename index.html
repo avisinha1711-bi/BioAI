@@ -598,29 +598,14 @@
                         </button>
                     </div>
                 </div>
-                
-                <!-- Real-time complementary strand preview -->
-                <div class="complementary-preview" id="complementary-preview">
-                    <div class="complementary-preview-title">
-                        <i class="fas fa-exchange-alt"></i> Complementary Strand (5'→3')
-                    </div>
-                    <div class="complementary-preview-content" id="complementary-preview-content">-</div>
-                </div>
             </div>
             
             <div class="results">
                 <div class="result-box">
                     <div class="result-title">
-                        <i class="fas fa-code"></i> Template DNA (3'→5')
+                        <i class="fas fa-exchange-alt"></i> Coding Strand (5'→3')
                     </div>
-                    <div class="result-content" id="template-dna">-</div>
-                </div>
-                
-                <div class="result-box">
-                    <div class="result-title">
-                        <i class="fas fa-exchange-alt"></i> Complementary DNA (5'→3')
-                    </div>
-                    <div class="result-content" id="complementary-dna">-</div>
+                    <div class="result-content" id="coding-strand">-</div>
                 </div>
                 
                 <div class="result-box">
@@ -779,13 +764,10 @@
             const translateBtn = document.getElementById('translate-btn');
             const clearBtn = document.getElementById('clear-btn');
             const dnaInput = document.getElementById('dna-sequence');
-            const templateDNA = document.getElementById('template-dna');
-            const complementaryDNA = document.getElementById('complementary-dna');
+            const codingStrand = document.getElementById('coding-strand');
             const mRNA = document.getElementById('mrna-sequence');
             const polypeptide = document.getElementById('polypeptide-chain');
             const molecularWeight = document.getElementById('molecular-weight');
-            const complementaryPreview = document.getElementById('complementary-preview');
-            const complementaryPreviewContent = document.getElementById('complementary-preview-content');
             const baseCount = document.getElementById('base-count');
             const notification = document.getElementById('notification');
             const proteinInfo = document.getElementById('protein-info');
@@ -829,8 +811,8 @@
                 }, 3000);
             }
             
-            // Function to get complementary DNA strand
-            function getComplementaryDNA(sequence) {
+            // Function to get complementary DNA strand (coding strand)
+            function getCodingStrand(sequence) {
                 const complementMap = { 'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C' };
                 return sequence.split('').map(base => complementMap[base]).join('');
             }
@@ -968,17 +950,6 @@
                 proteinInfo.textContent = `Peptide length: ${peptideLength}`;
             }
             
-            // Update complementary strand preview in real-time
-            function updateComplementaryPreview(sequence) {
-                if (sequence && sequence.length > 0) {
-                    const complementary = getComplementaryDNA(sequence);
-                    complementaryPreviewContent.textContent = complementary;
-                    complementaryPreview.classList.add('show');
-                } else {
-                    complementaryPreview.classList.remove('show');
-                }
-            }
-            
             // Update base counter
             function updateBaseCounter(sequence) {
                 baseCount.textContent = sequence.length;
@@ -994,9 +965,6 @@
                     dnaInput.value = dnaSequence.replace(/[^ATCG]/gi, '');
                 }
                 
-                // Update complementary preview
-                updateComplementaryPreview(dnaInput.value.toUpperCase().trim());
-                
                 // Update base counter
                 updateBaseCounter(dnaInput.value);
             });
@@ -1004,12 +972,10 @@
             // Clear button functionality
             clearBtn.addEventListener('click', function() {
                 dnaInput.value = '';
-                templateDNA.textContent = '-';
-                complementaryDNA.textContent = '-';
+                codingStrand.textContent = '-';
                 mRNA.textContent = '-';
                 polypeptide.textContent = '-';
                 molecularWeight.textContent = 'Molecular Weight: -';
-                complementaryPreview.classList.remove('show');
                 updateBaseCounter('');
                 updateVisualization(null, []);
                 showNotification('Cleared all data');
@@ -1024,8 +990,7 @@
                 translateBtn.disabled = true;
                 
                 // Reset previous results
-                templateDNA.textContent = '-';
-                complementaryDNA.textContent = '-';
+                codingStrand.textContent = '-';
                 mRNA.textContent = '-';
                 polypeptide.textContent = '-';
                 molecularWeight.textContent = 'Molecular Weight: -';
@@ -1047,8 +1012,8 @@
                 
                 // Simulate processing delay for better UX
                 setTimeout(() => {
-                    // Get complementary DNA (5' to 3')
-                    const complementary = getComplementaryDNA(dnaSequence);
+                    // Get coding strand (5' to 3')
+                    const coding = getCodingStrand(dnaSequence);
                     
                     // Transcribe to mRNA (5' to 3')
                     const mRNAseq = transcribeToMRNA(dnaSequence);
@@ -1061,8 +1026,7 @@
                     const weight = calculateMolecularWeight(proteinArray);
                     
                     // Update results
-                    templateDNA.textContent = dnaSequence;
-                    complementaryDNA.textContent = complementary;
+                    codingStrand.textContent = coding;
                     mRNA.textContent = mRNAseq;
                     polypeptide.textContent = proteinString;
                     molecularWeight.textContent = `Molecular Weight: ${weight.toFixed(2)} Da`;
