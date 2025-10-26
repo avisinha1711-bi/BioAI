@@ -71,7 +71,7 @@
         }
         
         header h1 {
-            font-size: 2.5rem;
+            font-size: 3.2rem; /* Increased from 2.5rem */
             margin-bottom: 10px;
             color: #e0e0e0;
             font-weight: 400;
@@ -146,6 +146,38 @@
         
         button:hover {
             background: #29b6f6;
+        }
+        
+        .complementary-preview {
+            background: rgba(30, 40, 60, 0.8);
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            border-left: 3px solid #4fc3f7;
+            display: none;
+        }
+        
+        .complementary-preview.show {
+            display: block;
+        }
+        
+        .complementary-preview-title {
+            font-weight: 600;
+            color: #bbdefb;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .complementary-preview-content {
+            font-family: 'Courier New', monospace;
+            background: rgba(40, 50, 70, 0.8);
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 1.1rem;
+            color: #e0e0e0;
         }
         
         .results {
@@ -290,6 +322,10 @@
                 transform: rotate(90deg);
                 margin: 10px 0;
             }
+            
+            header h1 {
+                font-size: 2.5rem; /* Slightly smaller on mobile */
+            }
         }
         
         .highlight {
@@ -343,6 +379,14 @@
                     <button id="translate-btn">
                         <i class="fas fa-code"></i> Translate
                     </button>
+                </div>
+                
+                <!-- Real-time complementary strand preview -->
+                <div class="complementary-preview" id="complementary-preview">
+                    <div class="complementary-preview-title">
+                        <i class="fas fa-exchange-alt"></i> Complementary Strand (5'→3')
+                    </div>
+                    <div class="complementary-preview-content" id="complementary-preview-content">-</div>
                 </div>
             </div>
             
@@ -449,6 +493,8 @@
             const mRNA = document.getElementById('mrna-sequence');
             const polypeptide = document.getElementById('polypeptide-chain');
             const molecularWeight = document.getElementById('molecular-weight');
+            const complementaryPreview = document.getElementById('complementary-preview');
+            const complementaryPreviewContent = document.getElementById('complementary-preview-content');
             
             // Genetic code mapping
             const geneticCode = {
@@ -607,6 +653,31 @@
                 }
             }
             
+            // Update complementary strand preview in real-time
+            function updateComplementaryPreview(sequence) {
+                if (sequence && sequence.length > 0) {
+                    const complementary = getComplementaryDNA(sequence);
+                    complementaryPreviewContent.textContent = complementary;
+                    complementaryPreview.classList.add('show');
+                } else {
+                    complementaryPreview.classList.remove('show');
+                }
+            }
+            
+            // Event listener for real-time input
+            dnaInput.addEventListener('input', function() {
+                const dnaSequence = dnaInput.value.toUpperCase().trim();
+                
+                // Only allow valid DNA characters
+                if (!/^[ATCG]*$/.test(dnaSequence)) {
+                    // Remove invalid characters
+                    dnaInput.value = dnaSequence.replace(/[^ATCG]/gi, '');
+                }
+                
+                // Update complementary preview
+                updateComplementaryPreview(dnaInput.value.toUpperCase().trim());
+            });
+            
             translateBtn.addEventListener('click', function() {
                 const dnaSequence = dnaInput.value.toUpperCase().trim();
                 
@@ -661,4 +732,3 @@
     </script>
 </body>
 </html>
-
