@@ -566,6 +566,63 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* New styles for strand selection */
+        .strand-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .strand-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .strand-option {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .strand-option label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-lighter);
+        }
+        
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(26, 34, 53, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+        
+        select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .strand-info {
+            background: rgba(37, 99, 235, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-lighter);
+        }
+        
+        .strand-info.hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -578,10 +635,46 @@
             <p>Translate DNA sequences to mRNA and polypeptide chains using advanced algorithms</p>
         </header>
         
+        <!-- Strand Selection Card -->
+        <div class="card">
+            <div class="strand-selection">
+                <div class="strand-options">
+                    <div class="strand-option">
+                        <label for="strand-type"><i class="fas fa-dna"></i> Strand Type</label>
+                        <select id="strand-type">
+                            <option value="template">Template Strand</option>
+                            <option value="coding">Coding Strand</option>
+                        </select>
+                    </div>
+                    
+                    <div class="strand-option">
+                        <label for="strand-direction"><i class="fas fa-arrows-alt-h"></i> Direction</label>
+                        <select id="strand-direction">
+                            <option value="3to5">3' → 5'</option>
+                            <option value="5to3">5' → 3'</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="strand-info" id="template-info">
+                    <strong>Template Strand:</strong> Serves as the template for mRNA synthesis during transcription. 
+                    The mRNA sequence is complementary to the template strand.
+                </div>
+                
+                <div class="strand-info hidden" id="coding-info">
+                    <strong>Coding Strand:</strong> Has the same sequence as the mRNA (with T instead of U). 
+                    Also called the sense strand or non-template strand.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Input Card -->
         <div class="card">
             <div class="input-section">
                 <div class="input-header">
-                    <label for="dna-sequence"><i class="fas fa-dna"></i> Enter DNA Template Strand (3' to 5'):</label>
+                    <label for="dna-sequence" id="sequence-label">
+                        <i class="fas fa-dna"></i> Enter DNA Sequence:
+                    </label>
                     <div class="sequence-counter">
                         <span id="base-count">0</span> bases
                     </div>
@@ -603,9 +696,9 @@
             <div class="results">
                 <div class="result-box">
                     <div class="result-title">
-                        <i class="fas fa-exchange-alt"></i> Coding Strand (5'→3')
+                        <i class="fas fa-exchange-alt"></i> <span id="complementary-label">Coding Strand (5'→3')</span>
                     </div>
-                    <div class="result-content" id="coding-strand">-</div>
+                    <div class="result-content" id="complementary-strand">-</div>
                 </div>
                 
                 <div class="result-box">
@@ -761,10 +854,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             createNetworkBackground();
             
+            // DOM Elements
+            const strandType = document.getElementById('strand-type');
+            const strandDirection = document.getElementById('strand-direction');
+            const templateInfo = document.getElementById('template-info');
+            const codingInfo = document.getElementById('coding-info');
+            const sequenceLabel = document.getElementById('sequence-label');
+            const complementaryLabel = document.getElementById('complementary-label');
+            
             const translateBtn = document.getElementById('translate-btn');
             const clearBtn = document.getElementById('clear-btn');
             const dnaInput = document.getElementById('dna-sequence');
-            const codingStrand = document.getElementById('coding-strand');
+            const complementaryStrand = document.getElementById('complementary-strand');
             const mRNA = document.getElementById('mrna-sequence');
             const polypeptide = document.getElementById('polypeptide-chain');
             const molecularWeight = document.getElementById('molecular-weight');
@@ -801,6 +902,21 @@
                 "Thr": 119.12, "Trp": 204.23, "Tyr": 181.19, "Val": 117.15
             };
             
+            // Update strand info display
+            function updateStrandInfo() {
+                if (strandType.value === 'template') {
+                    templateInfo.classList.remove('hidden');
+                    codingInfo.classList.add('hidden');
+                    sequenceLabel.innerHTML = '<i class="fas fa-dna"></i> Enter Template Strand:';
+                    complementaryLabel.textContent = 'Coding Strand (5\'→3\')';
+                } else {
+                    templateInfo.classList.add('hidden');
+                    codingInfo.classList.remove('hidden');
+                    sequenceLabel.innerHTML = '<i class="fas fa-dna"></i> Enter Coding Strand:';
+                    complementaryLabel.textContent = 'Template Strand (3\'→5\')';
+                }
+            }
+            
             // Show notification
             function showNotification(message, type = 'success') {
                 notification.textContent = message;
@@ -811,10 +927,15 @@
                 }, 3000);
             }
             
-            // Function to get complementary DNA strand (coding strand)
-            function getCodingStrand(sequence) {
+            // Function to get complementary DNA strand
+            function getComplementaryStrand(sequence) {
                 const complementMap = { 'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C' };
                 return sequence.split('').map(base => complementMap[base]).join('');
+            }
+            
+            // Function to reverse a sequence
+            function reverseSequence(sequence) {
+                return sequence.split('').reverse().join('');
             }
             
             // Function to transcribe DNA to mRNA
@@ -955,6 +1076,20 @@
                 baseCount.textContent = sequence.length;
             }
             
+            // Event listeners for strand selection
+            strandType.addEventListener('change', updateStrandInfo);
+            strandDirection.addEventListener('change', function() {
+                // Clear results when direction changes
+                complementaryStrand.textContent = '-';
+                mRNA.textContent = '-';
+                polypeptide.textContent = '-';
+                molecularWeight.textContent = 'Molecular Weight: -';
+                updateVisualization(null, []);
+            });
+            
+            // Initialize strand info
+            updateStrandInfo();
+            
             // Event listener for real-time input
             dnaInput.addEventListener('input', function() {
                 const dnaSequence = dnaInput.value.toUpperCase().trim();
@@ -972,7 +1107,7 @@
             // Clear button functionality
             clearBtn.addEventListener('click', function() {
                 dnaInput.value = '';
-                codingStrand.textContent = '-';
+                complementaryStrand.textContent = '-';
                 mRNA.textContent = '-';
                 polypeptide.textContent = '-';
                 molecularWeight.textContent = 'Molecular Weight: -';
@@ -990,7 +1125,7 @@
                 translateBtn.disabled = true;
                 
                 // Reset previous results
-                codingStrand.textContent = '-';
+                complementaryStrand.textContent = '-';
                 mRNA.textContent = '-';
                 polypeptide.textContent = '-';
                 molecularWeight.textContent = 'Molecular Weight: -';
@@ -1012,11 +1147,35 @@
                 
                 // Simulate processing delay for better UX
                 setTimeout(() => {
-                    // Get coding strand (5' to 3')
-                    const coding = getCodingStrand(dnaSequence);
+                    let templateStrand, codingStrand, mRNAseq;
                     
-                    // Transcribe to mRNA (5' to 3')
-                    const mRNAseq = transcribeToMRNA(dnaSequence);
+                    // Process based on selected strand type and direction
+                    if (strandType.value === 'template') {
+                        // User entered template strand
+                        if (strandDirection.value === '3to5') {
+                            // Template strand is 3'→5', which is the standard
+                            templateStrand = dnaSequence;
+                            codingStrand = getComplementaryStrand(dnaSequence);
+                        } else {
+                            // Template strand is 5'→3', need to reverse
+                            templateStrand = reverseSequence(dnaSequence);
+                            codingStrand = getComplementaryStrand(templateStrand);
+                        }
+                    } else {
+                        // User entered coding strand
+                        if (strandDirection.value === '5to3') {
+                            // Coding strand is 5'→3', which is the standard
+                            codingStrand = dnaSequence;
+                            templateStrand = getComplementaryStrand(dnaSequence);
+                        } else {
+                            // Coding strand is 3'→5', need to reverse
+                            codingStrand = reverseSequence(dnaSequence);
+                            templateStrand = getComplementaryStrand(codingStrand);
+                        }
+                    }
+                    
+                    // Transcribe to mRNA (5' to 3') using template strand
+                    mRNAseq = transcribeToMRNA(templateStrand);
                     
                     // Translate to polypeptide chain
                     const proteinArray = translateToPolypeptide(mRNAseq);
@@ -1026,7 +1185,7 @@
                     const weight = calculateMolecularWeight(proteinArray);
                     
                     // Update results
-                    codingStrand.textContent = coding;
+                    complementaryStrand.textContent = strandType.value === 'template' ? codingStrand : templateStrand;
                     mRNA.textContent = mRNAseq;
                     polypeptide.textContent = proteinString;
                     molecularWeight.textContent = `Molecular Weight: ${weight.toFixed(2)} Da`;
