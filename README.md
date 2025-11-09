@@ -34,3 +34,4 @@ Genetic engineering and biotechnology: Understanding how to manipulate gene expr
 Medicine: Studying mutations and gene expression based on the central dogma is critical for diagnosing and treating genetic diseases, cancer, and viral infections.
 Evolutionary biology: The comparison of DNA, RNA, and protein sequences across species provides vast amounts of information about evolutionary relationships and ancestry.
 Research: The principles of the central dogma guide the design of countless experiments aimed at understanding cellular function, regulation, and disease mechanisms.
+Link: https://avisinha1711-bi.github.io/GenefloAI/
