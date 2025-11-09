@@ -1,3 +1,5 @@
+Link: https://avisinha1711-bi.github.io/GenefloAI/
+
 The Central Dogma of Molecular Biology-
 The central dogma of molecular biology is the core principle that describes the fundamental and directional flow of genetic information within a biological system. It explains how the coded instructions in deoxyribonucleic acid (DNA) are expressed as a functional product, typically a protein. 
 The standard flow of information is as follows: DNA is replicated to perpetuate genetic continuity, transcribed into messenger RNA (mRNA), and finally translated into a protein.
@@ -34,4 +36,3 @@ Genetic engineering and biotechnology: Understanding how to manipulate gene expr
 Medicine: Studying mutations and gene expression based on the central dogma is critical for diagnosing and treating genetic diseases, cancer, and viral infections.
 Evolutionary biology: The comparison of DNA, RNA, and protein sequences across species provides vast amounts of information about evolutionary relationships and ancestry.
 Research: The principles of the central dogma guide the design of countless experiments aimed at understanding cellular function, regulation, and disease mechanisms.
-Link: https://avisinha1711-bi.github.io/GenefloAI/
