@@ -623,6 +623,167 @@
         .strand-info.hidden {
             display: none;
         }
+
+        /* Chatbot Styles - Improved sizing and positioning */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .chatbot-toggle:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 380px;
+            height: 520px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s;
+            max-height: calc(100vh - 150px);
+            max-width: calc(100vw - 60px);
+        }
+
+        .chatbot-window.active {
+            transform: scale(1);
+        }
+
+        .chatbot-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            color: var(--text-lighter);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .chatbot-close:hover {
+            color: var(--text-light);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            line-height: 1.4;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: rgba(26, 34, 53, 0.7);
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chatbot-input {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 16px;
+        }
+
+        .chatbot-input button {
+            padding: 12px 16px;
+        }
+
+        .suggested-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .suggested-question {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-light);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggested-question:hover {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .chatbot-window {
+                width: 90vw;
+                right: 5vw;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .chatbot-window {
+                height: 450px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -799,6 +960,35 @@
         </footer>
     </div>
 
+    <!-- Chatbot - Now MolGenoBot -->
+    <div class="chatbot-container">
+        <div class="chatbot-toggle" id="chatbot-toggle">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <h3><i class="fas fa-robot"></i> MolGenoBot</h3>
+                <button class="chatbot-close" id="chatbot-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbot-messages">
+                <div class="message bot">
+                    Hello! I'm MolGenoBot, your molecular genetics assistant. I can help explain DNA structure, transcription, translation, genetic regulation, and more. How can I assist you today?
+                    <div class="suggested-questions">
+                        <div class="suggested-question">Explain DNA structure</div>
+                        <div class="suggested-question">What is the Central Dogma?</div>
+                        <div class="suggested-question">Tell me about RNA polymerase</div>
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbot-input" placeholder="Ask about molecular genetics...">
+                <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
     <div class="notification" id="notification"></div>
 
     <script>
@@ -851,8 +1041,189 @@
             }
         }
 
+        // MolGenoBot functionality
+        function initializeChatbot() {
+            const chatbotToggle = document.getElementById('chatbot-toggle');
+            const chatbotWindow = document.getElementById('chatbot-window');
+            const chatbotClose = document.getElementById('chatbot-close');
+            const chatbotMessages = document.getElementById('chatbot-messages');
+            const chatbotInput = document.getElementById('chatbot-input');
+            const chatbotSend = document.getElementById('chatbot-send');
+            
+            // Toggle chatbot window
+            chatbotToggle.addEventListener('click', () => {
+                chatbotWindow.classList.toggle('active');
+            });
+            
+            // Close chatbot window
+            chatbotClose.addEventListener('click', () => {
+                chatbotWindow.classList.remove('active');
+            });
+            
+            // Send message
+            function sendMessage() {
+                const message = chatbotInput.value.trim();
+                if (!message) return;
+                
+                // Add user message
+                addMessage(message, 'user');
+                chatbotInput.value = '';
+                
+                // Generate bot response
+                setTimeout(() => {
+                    const response = generateResponse(message);
+                    addMessage(response, 'bot');
+                }, 1000);
+            }
+            
+            // Send message on button click
+            chatbotSend.addEventListener('click', sendMessage);
+            
+            // Send message on Enter key
+            chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Add message to chat
+            function addMessage(text, sender) {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', sender);
+                messageElement.textContent = text;
+                chatbotMessages.appendChild(messageElement);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            }
+            
+            // Suggested questions
+            document.querySelectorAll('.suggested-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    chatbotInput.value = question.textContent;
+                    sendMessage();
+                });
+            });
+            
+            // Tone detection and response generation
+            function generateResponse(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // Detect tone and adjust response style
+                const tone = detectTone(message);
+                
+                // DNA Structure responses
+                if (lowerMessage.includes('dna') && (lowerMessage.includes('structure') || lowerMessage.includes('helix'))) {
+                    return `${tone.prefix}DNA has a double-helical structure with two antiparallel strands. The backbone consists of deoxyribose sugars connected by phosphodiester bonds. Bases (A, T, C, G) pair specifically: A-T with 2 hydrogen bonds and G-C with 3 hydrogen bonds. DNA exists in different helical forms (A, B, C) with B-form being most common in cells. The structure allows for information storage and precise replication.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('central dogma')) {
+                    return `${tone.prefix}The Central Dogma describes the flow of genetic information: DNA → RNA → Protein. DNA is transcribed to mRNA, which is then translated into proteins. This process ensures genetic information is accurately passed from genes to functional proteins. It's a fundamental principle in molecular biology.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('rna polymerase') || lowerMessage.includes('transcription')) {
+                    return `${tone.prefix}RNA polymerase is the enzyme that synthesizes RNA from a DNA template. E. coli has one RNA polymerase with multiple subunits (β, β', α, σ), while eukaryotes have three types (I, II, III). Transcription involves initiation (polymerase binding to promoter), elongation (RNA synthesis), and termination. The σ subunit helps recognize promoters, and different σ factors allow transcription of different gene classes.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('translation') || lowerMessage.includes('protein synthesis')) {
+                    return `${tone.prefix}Translation converts mRNA into proteins using ribosomes. It involves initiation (ribosome assembly on mRNA), elongation (amino acid addition), and termination (protein release). Transfer RNA (tRNA) brings amino acids to the ribosome, where they're added to the growing polypeptide chain. The genetic code is read in triplets (codons), with AUG as start and UAA/UAG/UGA as stop codons.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('genetic code')) {
+                    return `${tone.prefix}The genetic code is the set of rules by which mRNA sequences are translated into proteins. It is universal, degenerate (multiple codons for same amino acid), and unambiguous. There are 64 possible codons: 61 code for amino acids and 3 are stop signals. The code's degeneracy provides protection against mutations.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('dna replication') || lowerMessage.includes('dna synthesis')) {
+                    return `${tone.prefix}DNA replication is semiconservative and bidirectional from origins. In E. coli, DNA polymerase III is the main replicative enzyme. The leading strand is synthesized continuously, while the lagging strand is made as Okazaki fragments. Replication requires primase (makes RNA primers), DNA ligase (joins fragments), and various other proteins. Proofreading ensures high fidelity through 3'-5' exonuclease activity.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('mutation')) {
+                    return `${tone.prefix}Mutations are changes in DNA sequence. Point mutations change single bases and can be silent, missense, or nonsense. Frameshift mutations insert or delete bases, altering the reading frame. Larger mutations include inversions (segment reversal) and translocations (movement between chromosomes). Cells have repair systems to correct DNA damage and mismatches.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('operon') || lowerMessage.includes('lac operon')) {
+                    return `${tone.prefix}The lac operon is a classic example of gene regulation in bacteria. It consists of structural genes (lacZ, lacY, lacA) and regulatory elements. The lac repressor protein binds to the operator, preventing transcription. When lactose is present, it binds to the repressor, causing it to release from DNA and allowing transcription. This is an inducible system.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('lambda phage')) {
+                    return `${tone.prefix}Lambda phage is a bacteriophage that can undergo lytic or lysogenic cycles. In the lytic cycle, the phage replicates and lyses the host. In lysogeny, the phage DNA integrates into the host chromosome. The decision between cycles is regulated by proteins like CI (repressor) and Cro. Lambda has been crucial for understanding gene regulation and recombination.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('supercoiling') || lowerMessage.includes('superhelical')) {
+                    return `${tone.prefix}Supercoiling refers to the overwinding or underwinding of DNA. Negative supercoiling facilitates strand separation and is important for processes like transcription and replication. Topoisomerases (gyrase, topoisomerase I) regulate supercoiling by breaking and rejoining DNA strands. In bacteria, DNA is typically negatively supercoiled.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('nucleosome') || lowerMessage.includes('chromosome structure')) {
+                    return `${tone.prefix}In eukaryotes, DNA is packaged into nucleosomes - DNA wrapped around histone proteins (H2A, H2B, H3, H4). Nucleosomes form chromatin fibers, which are further compacted. This packaging regulates DNA accessibility. The 'linking number paradox' refers to the discrepancy between DNA wrapping in nucleosomes and measured supercoiling.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('enhancer') || lowerMessage.includes('promoter')) {
+                    return `${tone.prefix}Promoters are DNA sequences where RNA polymerase binds to initiate transcription. Enhancers are regulatory sequences that can be located far from genes and increase transcription. They work through DNA looping, bringing regulatory proteins close to the transcription machinery. Enhancers are important for tissue-specific and developmentally regulated gene expression.${tone.suffix}`;
+                }
+                
+                if (lowerMessage.includes('dna repair')) {
+                    return `${tone.prefix}Cells have multiple DNA repair systems: Mismatch repair corrects replication errors, excision repair removes damaged bases, and recombination repair fixes double-strand breaks. The MutS, MutL, MutH system in E. coli recognizes mismatches and repairs the newly synthesized strand using methylation patterns as a guide.${tone.suffix}`;
+                }
+                
+                // Default response
+                return `${tone.prefix}I'm MolGenoBot, specialized in molecular genetics. I can explain DNA structure, replication, transcription, translation, gene regulation, mutations, and various molecular biology techniques. Could you please ask about one of these specific topics or rephrase your question?${tone.suffix}`;
+            }
+            
+            // Detect tone from user message
+            function detectTone(message) {
+                const lowerMessage = message.toLowerCase();
+                
+                // Check for excited/enthusiastic tone
+                if (lowerMessage.includes('!') || lowerMessage.includes('amazing') || 
+                    lowerMessage.includes('wow') || lowerMessage.includes('awesome') ||
+                    lowerMessage.includes('love') || lowerMessage.includes('great')) {
+                    return {
+                        prefix: "Wow, exciting question! ",
+                        suffix: " Isn't molecular genetics fascinating?"
+                    };
+                }
+                
+                // Check for confused/uncertain tone
+                if (lowerMessage.includes('?') && (lowerMessage.includes('confused') || 
+                    lowerMessage.includes('not sure') || lowerMessage.includes('help') ||
+                    lowerMessage.includes('understand') || lowerMessage.includes('what') ||
+                    lowerMessage.includes('how') || lowerMessage.includes('why'))) {
+                    return {
+                        prefix: "I'd be happy to clarify that for you! ",
+                        suffix: " Does that help clear things up?"
+                    };
+                }
+                
+                // Check for formal/academic tone
+                if (lowerMessage.includes('please') || lowerMessage.includes('could you') || 
+                    lowerMessage.includes('would you') || lowerMessage.includes('explain') ||
+                    lowerMessage.length > 50) {
+                    return {
+                        prefix: "Certainly. ",
+                        suffix: " Let me know if you need further details."
+                    };
+                }
+                
+                // Check for casual/friendly tone
+                if (lowerMessage.includes('hey') || lowerMessage.includes('hi') || 
+                    lowerMessage.includes('hello') || lowerMessage.includes('thanks') ||
+                    lowerMessage.includes('thank you') || lowerMessage.includes('cool') ||
+                    lowerMessage.includes('nice')) {
+                    return {
+                        prefix: "Hey there! ",
+                        suffix: " Hope that helps!"
+                    };
+                }
+                
+                // Default neutral tone
+                return {
+                    prefix: "",
+                    suffix: ""
+                };
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             createNetworkBackground();
+            initializeChatbot();
             
             // DOM Elements
             const strandType = document.getElementById('strand-type');
