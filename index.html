@@ -960,7 +960,7 @@
         </footer>
     </div>
 
-    <!-- Chatbot - Now MolGenoBot -->
+    <!-- Chatbot - Now MolGenoBot with enhanced knowledge -->
     <div class="chatbot-container">
         <div class="chatbot-toggle" id="chatbot-toggle">
             <i class="fas fa-robot"></i>
@@ -974,11 +974,12 @@
             </div>
             <div class="chatbot-messages" id="chatbot-messages">
                 <div class="message bot">
-                    Hello! I'm MolGenoBot, your molecular genetics assistant. I can help explain DNA structure, transcription, translation, genetic regulation, and more. How can I assist you today?
+                    Hello! I'm MolGenoBot, your molecular genetics assistant. I've been trained on the latest research including "Human Molecular Genetics and Genomics — Important Advances and Exciting Possibilities" by Collins, Doudna, Lander, and Rotimi. I can explain DNA structure, transcription, translation, genetic regulation, CRISPR technology, genomic diversity, and more. How can I assist you today?
                     <div class="suggested-questions">
-                        <div class="suggested-question">Explain DNA structure</div>
-                        <div class="suggested-question">What is the Central Dogma?</div>
-                        <div class="suggested-question">Tell me about RNA polymerase</div>
+                        <div class="suggested-question">Explain CRISPR-Cas9</div>
+                        <div class="suggested-question">What are polygenic risk scores?</div>
+                        <div class="suggested-question">Tell me about genomic diversity</div>
+                        <div class="suggested-question">What is the Human Genome Project?</div>
                     </div>
                 </div>
             </div>
@@ -1041,7 +1042,7 @@
             }
         }
 
-        // MolGenoBot functionality
+        // Enhanced MolGenoBot functionality with research paper knowledge
         function initializeChatbot() {
             const chatbotToggle = document.getElementById('chatbot-toggle');
             const chatbotWindow = document.getElementById('chatbot-window');
@@ -1069,11 +1070,19 @@
                 addMessage(message, 'user');
                 chatbotInput.value = '';
                 
+                // Show typing indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.classList.add('message', 'bot');
+                typingIndicator.innerHTML = '<div class="loading" style="display:inline-block; margin-right:10px;"></div> Thinking...';
+                chatbotMessages.appendChild(typingIndicator);
+                chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                
                 // Generate bot response
                 setTimeout(() => {
+                    chatbotMessages.removeChild(typingIndicator);
                     const response = generateResponse(message);
                     addMessage(response, 'bot');
-                }, 1000);
+                }, 1500);
             }
             
             // Send message on button click
@@ -1090,7 +1099,7 @@
             function addMessage(text, sender) {
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message', sender);
-                messageElement.textContent = text;
+                messageElement.innerHTML = text;
                 chatbotMessages.appendChild(messageElement);
                 chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             }
@@ -1103,12 +1112,109 @@
                 });
             });
             
-            // Tone detection and response generation
+            // Enhanced response generation with research paper knowledge
             function generateResponse(message) {
                 const lowerMessage = message.toLowerCase();
                 
                 // Detect tone and adjust response style
                 const tone = detectTone(message);
+                
+                // CRISPR-Cas9 responses
+                if (lowerMessage.includes('crispr') || lowerMessage.includes('cas9') || lowerMessage.includes('gene editing')) {
+                    return `${tone.prefix}CRISPR-Cas9 is a revolutionary gene-editing technology derived from bacterial immune systems. As highlighted in the 2021 research by Collins et al., CRISPR-Cas9 emerged around 2012 when Emmanuelle Charpentier and Jennifer Doudna showed it could edit DNA in vitro (earning them the 2020 Nobel Prize in Chemistry).<br><br>
+                    <strong>Key advances:</strong><br>
+                    • Can create targeted DNA breaks that trigger site-specific DNA repair<br>
+                    • Next-generation formats can control gene transcription or alter sequences via base editing without DNA breaks<br>
+                    • In 2020, the first patient with sickle cell disease was treated with an ex vivo CRISPR-Cas9 approach<br>
+                    • Multiple clinical trials are underway, though long-term safety is still being evaluated<br>
+                    • Current applications focus on single-gene disorders where editing can be done ex vivo on appropriate cells${tone.suffix}`;
+                }
+                
+                // Polygenic risk scores
+                if (lowerMessage.includes('polygenic risk') || lowerMessage.includes('risk score') || 
+                    (lowerMessage.includes('polygenic') && lowerMessage.includes('risk'))) {
+                    return `${tone.prefix}Polygenic risk scores are tools that combine information from multiple genetic variants to estimate an individual's genetic predisposition to common diseases. According to recent research:<br><br>
+                    <strong>Current status:</strong><br>
+                    • Over 100,000 robust associations between genomic regions and common diseases have been identified<br>
+                    • These scores can identify patients at increased risk for heart disease, breast cancer, and other conditions<br>
+                    • However, additional rigorous testing is needed, including evaluation of clinical outcomes<br>
+                    • A major limitation is that most genomic research has involved participants of European ancestry<br>
+                    • This lack of diversity raises questions about whether these scores will benefit all populations equally${tone.suffix}`;
+                }
+                
+                // Genomic diversity
+                if (lowerMessage.includes('genomic diversity') || lowerMessage.includes('diversity') && 
+                    (lowerMessage.includes('genomic') || lowerMessage.includes('genetic'))) {
+                    return `${tone.prefix}Genomic diversity refers to the genetic variation across human populations. The research paper highlights critical issues:<br><br>
+                    <strong>Key findings:</strong><br>
+                    • Despite potential insights, both investigators and participants in genomic research have largely been of European ancestry<br>
+                    • This lack of diversity hinders biological understanding and exacerbates health disparities<br>
+                    • Studies of diverse populations have revealed population-level differences in disease susceptibility and drug responses<br>
+                    • Examples include:<br>
+                    &nbsp;&nbsp;- African ancestry-specific APOL1 variants that protect against sleeping sickness but increase kidney failure risk<br>
+                    &nbsp;&nbsp;- A risk haplotype for type 2 diabetes in SLC16A11 common in Indigenous peoples of the Americas<br>
+                    &nbsp;&nbsp;- PCSK9 loss-of-function mutations more common in people of African ancestry, reducing cholesterol and heart disease risk<br>
+                    • Initiatives like H3Africa are working to increase participation from underrepresented populations${tone.suffix}`;
+                }
+                
+                // Human Genome Project
+                if (lowerMessage.includes('human genome project') || lowerMessage.includes('hgp')) {
+                    return `${tone.prefix}The Human Genome Project (HGP) was a landmark international research effort to sequence the entire human genome. Key milestones from the research:<br><br>
+                    <strong>Project timeline:</strong><br>
+                    • 1990: NIH and Department of Energy launched the HGP<br>
+                    • 1994: Human genetic mapping goals met<br>
+                    • 1995: Human physical mapping goals met<br>
+                    • 1997: "Bermuda principles" established rapid, public release of genome data<br>
+                    • 2001: First draft of human genome sequence published by HGP consortium and Celera Genomics<br>
+                    • 2003: HGP completed more than 2 years ahead of schedule<br><br>
+                    <strong>Impact:</strong><br>
+                    • DNA sequencing throughput increased from 1,000 base pairs per day to over 1,000 per second<br>
+                    • Cost of sequencing dropped from $3 billion during HGP to about $600 today<br>
+                    • Enabled discovery of genes for over 5,000 rare Mendelian diseases<br>
+                    • Paved the way for personalized medicine and genomic research${tone.suffix}`;
+                }
+                
+                // Single-cell sequencing
+                if (lowerMessage.includes('single-cell') || lowerMessage.includes('single cell') || 
+                    (lowerMessage.includes('rna') && lowerMessage.includes('sequencing'))) {
+                    return `${tone.prefix}Single-cell RNA sequencing represents a major advancement in genomics research. According to the latest findings:<br><br>
+                    <strong>Recent developments:</strong><br>
+                    • Genomics research has moved beyond analyzing DNA variation to studying gene expression in individual cells<br>
+                    • Driven by new methods for single-cell RNA sequencing and chromatin analysis<br>
+                    • Tens of millions of cells have been characterized en route to a complete cell atlas of the human body<br>
+                    • This effort is revealing hundreds of new cell types<br>
+                    • Characterizing how cell types differ between healthy people and those with various diseases<br>
+                    • Provides unprecedented resolution for understanding cellular heterogeneity and disease mechanisms${tone.suffix}`;
+                }
+                
+                // Biobanks and large-scale genomics
+                if (lowerMessage.includes('biobank') || lowerMessage.includes('all of us') || 
+                    lowerMessage.includes('uk biobank') || lowerMessage.includes('large-scale genomic')) {
+                    return `${tone.prefix}Large-scale biobanks are revolutionizing genomic research. Key initiatives mentioned in the research:<br><br>
+                    <strong>Major projects:</strong><br>
+                    • <strong>UK Biobank:</strong> Contains genetic and health data from half a million participants<br>
+                    • <strong>All of Us Research Program:</strong> NIH initiative enrolling over 1 million participants contributing genetic, health, and environmental data<br>
+                    • <strong>Cancer Genome Atlas (TCGA):</strong> Molecularly characterized over 20,000 samples across 33 cancer types<br>
+                    • <strong>International HapMap Project:</strong> Gathers data on human genetic variation to speed gene discovery<br><br>
+                    <strong>Goals:</strong><br>
+                    • Create comprehensive resources linking genomic information with medical records<br>
+                    • Enable powerful explorations rather than hypothesis-limited research<br>
+                    • Ultimately integrate genomic information into routine medical care${tone.suffix}`;
+                }
+                
+                // Gene therapy
+                if (lowerMessage.includes('gene therapy') || (lowerMessage.includes('gene') && 
+                    lowerMessage.includes('therapy')) || lowerMessage.includes('molecularly targeted')) {
+                    return `${tone.prefix}Gene therapy represents a promising approach for treating genetic disorders. Recent advances include:<br><br>
+                    <strong>Success stories:</strong><br>
+                    • Safe and effective molecularly targeted drugs now available for 90% of people with cystic fibrosis<br>
+                    • Dramatic successes for spinal muscular atrophy and hemophilia<br>
+                    • For some Mendelian disorders, targeted drugs have been developed using detailed pathophysiology understanding<br><br>
+                    <strong>Challenges:</strong><br>
+                    • Developing and validating treatments has been more challenging than diagnosis<br>
+                    • The traditional approach can take decades and doesn't scale well to thousands of genetic disorders<br>
+                    • Precisely targeted genome-editing technologies now provide new therapeutic avenues${tone.suffix}`;
+                }
                 
                 // DNA Structure responses
                 if (lowerMessage.includes('dna') && (lowerMessage.includes('structure') || lowerMessage.includes('helix'))) {
@@ -1127,44 +1233,20 @@
                     return `${tone.prefix}Translation converts mRNA into proteins using ribosomes. It involves initiation (ribosome assembly on mRNA), elongation (amino acid addition), and termination (protein release). Transfer RNA (tRNA) brings amino acids to the ribosome, where they're added to the growing polypeptide chain. The genetic code is read in triplets (codons), with AUG as start and UAA/UAG/UGA as stop codons.${tone.suffix}`;
                 }
                 
-                if (lowerMessage.includes('genetic code')) {
-                    return `${tone.prefix}The genetic code is the set of rules by which mRNA sequences are translated into proteins. It is universal, degenerate (multiple codons for same amino acid), and unambiguous. There are 64 possible codons: 61 code for amino acids and 3 are stop signals. The code's degeneracy provides protection against mutations.${tone.suffix}`;
+                // Ethical considerations
+                if (lowerMessage.includes('ethical') || lowerMessage.includes('privacy') || 
+                    lowerMessage.includes('heritable') || lowerMessage.includes('equitable')) {
+                    return `${tone.prefix}Ethical considerations in genomics are increasingly important. The research highlights several key questions:<br><br>
+                    <strong>Critical issues:</strong><br>
+                    • How do we ensure equitable and inclusive access to research opportunities and therapeutic benefits?<br>
+                    • How do we balance scientific progress with emerging ethical issues?<br>
+                    • Questions regarding the use of genome-editing technologies for heritable genetic changes<br>
+                    • How do we sustain data-sharing ethos while protecting participant privacy and respecting cultural norms?<br><br>
+                    These questions underscore why oversight bodies like the National Academy of Medicine will be crucial in the coming decades.${tone.suffix}`;
                 }
                 
-                if (lowerMessage.includes('dna replication') || lowerMessage.includes('dna synthesis')) {
-                    return `${tone.prefix}DNA replication is semiconservative and bidirectional from origins. In E. coli, DNA polymerase III is the main replicative enzyme. The leading strand is synthesized continuously, while the lagging strand is made as Okazaki fragments. Replication requires primase (makes RNA primers), DNA ligase (joins fragments), and various other proteins. Proofreading ensures high fidelity through 3'-5' exonuclease activity.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('mutation')) {
-                    return `${tone.prefix}Mutations are changes in DNA sequence. Point mutations change single bases and can be silent, missense, or nonsense. Frameshift mutations insert or delete bases, altering the reading frame. Larger mutations include inversions (segment reversal) and translocations (movement between chromosomes). Cells have repair systems to correct DNA damage and mismatches.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('operon') || lowerMessage.includes('lac operon')) {
-                    return `${tone.prefix}The lac operon is a classic example of gene regulation in bacteria. It consists of structural genes (lacZ, lacY, lacA) and regulatory elements. The lac repressor protein binds to the operator, preventing transcription. When lactose is present, it binds to the repressor, causing it to release from DNA and allowing transcription. This is an inducible system.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('lambda phage')) {
-                    return `${tone.prefix}Lambda phage is a bacteriophage that can undergo lytic or lysogenic cycles. In the lytic cycle, the phage replicates and lyses the host. In lysogeny, the phage DNA integrates into the host chromosome. The decision between cycles is regulated by proteins like CI (repressor) and Cro. Lambda has been crucial for understanding gene regulation and recombination.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('supercoiling') || lowerMessage.includes('superhelical')) {
-                    return `${tone.prefix}Supercoiling refers to the overwinding or underwinding of DNA. Negative supercoiling facilitates strand separation and is important for processes like transcription and replication. Topoisomerases (gyrase, topoisomerase I) regulate supercoiling by breaking and rejoining DNA strands. In bacteria, DNA is typically negatively supercoiled.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('nucleosome') || lowerMessage.includes('chromosome structure')) {
-                    return `${tone.prefix}In eukaryotes, DNA is packaged into nucleosomes - DNA wrapped around histone proteins (H2A, H2B, H3, H4). Nucleosomes form chromatin fibers, which are further compacted. This packaging regulates DNA accessibility. The 'linking number paradox' refers to the discrepancy between DNA wrapping in nucleosomes and measured supercoiling.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('enhancer') || lowerMessage.includes('promoter')) {
-                    return `${tone.prefix}Promoters are DNA sequences where RNA polymerase binds to initiate transcription. Enhancers are regulatory sequences that can be located far from genes and increase transcription. They work through DNA looping, bringing regulatory proteins close to the transcription machinery. Enhancers are important for tissue-specific and developmentally regulated gene expression.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('dna repair')) {
-                    return `${tone.prefix}Cells have multiple DNA repair systems: Mismatch repair corrects replication errors, excision repair removes damaged bases, and recombination repair fixes double-strand breaks. The MutS, MutL, MutH system in E. coli recognizes mismatches and repairs the newly synthesized strand using methylation patterns as a guide.${tone.suffix}`;
-                }
-                
-                // Default response
-                return `${tone.prefix}I'm MolGenoBot, specialized in molecular genetics. I can explain DNA structure, replication, transcription, translation, gene regulation, mutations, and various molecular biology techniques. Could you please ask about one of these specific topics or rephrase your question?${tone.suffix}`;
+                // Default response with research context
+                return `${tone.prefix}I'm MolGenoBot, trained on the latest molecular genetics research including "Human Molecular Genetics and Genomics — Important Advances and Exciting Possibilities." I can explain DNA structure, replication, transcription, translation, gene regulation, mutations, CRISPR technology, genomic diversity, polygenic risk scores, single-cell sequencing, biobanks, gene therapy, and ethical considerations in genomics. Could you please ask about one of these specific topics or rephrase your question?${tone.suffix}`;
             }
             
             // Detect tone from user message
