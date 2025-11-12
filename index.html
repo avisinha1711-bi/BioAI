@@ -960,7 +960,7 @@
         </footer>
     </div>
 
-    <!-- Chatbot - Now MolGenoBot with enhanced knowledge -->
+    <!-- Chatbot - Now MolGenoBot with enhanced knowledge from the PDF -->
     <div class="chatbot-container">
         <div class="chatbot-toggle" id="chatbot-toggle">
             <i class="fas fa-robot"></i>
@@ -974,12 +974,12 @@
             </div>
             <div class="chatbot-messages" id="chatbot-messages">
                 <div class="message bot">
-                    Hello! I am MolGenoBot your assistant for this GenefloAI Web
+                    Hello! I'm MolGenoBot, your molecular genetics assistant. I can help explain DNA structure, replication, transcription, translation, and more based on the latest research. What would you like to know?
                     <div class="suggested-questions">
-                        <div class="suggested-question">Explain CRISPR-Cas9</div>
-                        <div class="suggested-question">What are polygenic risk scores?</div>
-                        <div class="suggested-question">Tell me about genomic diversity</div>
-                        <div class="suggested-question">What is the Human Genome Project?</div>
+                        <div class="suggested-question">DNA structure</div>
+                        <div class="suggested-question">Transcription process</div>
+                        <div class="suggested-question">Genetic code</div>
+                        <div class="suggested-question">Lac operon</div>
                     </div>
                 </div>
             </div>
@@ -1042,7 +1042,7 @@
             }
         }
 
-        // Enhanced MolGenoBot functionality with research paper knowledge
+        // Enhanced MolGenoBot functionality with knowledge from the PDF
         function initializeChatbot() {
             const chatbotToggle = document.getElementById('chatbot-toggle');
             const chatbotWindow = document.getElementById('chatbot-window');
@@ -1112,141 +1112,191 @@
                 });
             });
             
-            // Enhanced response generation with research paper knowledge
+            // Enhanced response generation with PDF knowledge
             function generateResponse(message) {
                 const lowerMessage = message.toLowerCase();
                 
-                // Detect tone and adjust response style
-                const tone = detectTone(message);
-                
-                // CRISPR-Cas9 responses
-                if (lowerMessage.includes('crispr') || lowerMessage.includes('cas9') || lowerMessage.includes('gene editing')) {
-                    return `${tone.prefix}CRISPR-Cas9 is a revolutionary gene-editing technology derived from bacterial immune systems. As highlighted in the 2021 research by Collins et al., CRISPR-Cas9 emerged around 2012 when Emmanuelle Charpentier and Jennifer Doudna showed it could edit DNA in vitro (earning them the 2020 Nobel Prize in Chemistry).<br><br>
-                    <strong>Key advances:</strong><br>
-                    • Can create targeted DNA breaks that trigger site-specific DNA repair<br>
-                    • Next-generation formats can control gene transcription or alter sequences via base editing without DNA breaks<br>
-                    • In 2020, the first patient with sickle cell disease was treated with an ex vivo CRISPR-Cas9 approach<br>
-                    • Multiple clinical trials are underway, though long-term safety is still being evaluated<br>
-                    • Current applications focus on single-gene disorders where editing can be done ex vivo on appropriate cells${tone.suffix}`;
+                // DNA structure responses
+                if (lowerMessage.includes('dna') && (lowerMessage.includes('structure') || lowerMessage.includes('helix') || lowerMessage.includes('double helix'))) {
+                    return `DNA has a <strong>double-helical structure</strong> with two antiparallel polynucleotide chains. Key features:<br><br>
+                    • The backbone consists of sugar-phosphate groups<br>
+                    • Bases project inward and form hydrogen bonds<br>
+                    • <span class="highlight">Adenine (A)</span> pairs with <span class="highlight">Thymine (T)</span> via 2 hydrogen bonds<br>
+                    • <span class="highlight">Guanine (G)</span> pairs with <span class="highlight">Cytosine (C)</span> via 3 hydrogen bonds<br>
+                    • The two chains have anti-parallel polarity (5'→3' and 3'→5')<br>
+                    • The helix is right-handed with a pitch of 3.4 nm<br>
+                    • There are roughly 10 base pairs per turn<br>
+                    • Base stacking provides additional stability to the structure<br><br>
+                    This structure was proposed by Watson and Crick in 1953 based on X-ray diffraction data from Wilkins and Franklin.`;
                 }
                 
-                // Polygenic risk scores
-                if (lowerMessage.includes('polygenic risk') || lowerMessage.includes('risk score') || 
-                    (lowerMessage.includes('polygenic') && lowerMessage.includes('risk'))) {
-                    return `${tone.prefix}Polygenic risk scores are tools that combine information from multiple genetic variants to estimate an individual's genetic predisposition to common diseases. According to recent research:<br><br>
-                    <strong>Current status:</strong><br>
-                    • Over 100,000 robust associations between genomic regions and common diseases have been identified<br>
-                    • These scores can identify patients at increased risk for heart disease, breast cancer, and other conditions<br>
-                    • However, additional rigorous testing is needed, including evaluation of clinical outcomes<br>
-                    • A major limitation is that most genomic research has involved participants of European ancestry<br>
-                    • This lack of diversity raises questions about whether these scores will benefit all populations equally${tone.suffix}`;
+                // DNA replication
+                if (lowerMessage.includes('dna replication') || lowerMessage.includes('replication') || lowerMessage.includes('semiconservative')) {
+                    return `DNA replication is <strong>semiconservative</strong>, meaning each new DNA molecule contains one original strand and one newly synthesized strand. Key aspects:<br><br>
+                    • Proposed by Watson and Crick in 1953<br>
+                    • Proven by Meselson and Stahl in 1958 using <sup>15</sup>N and <sup>14</sup>N isotopes<br>
+                    • Main enzyme: DNA-dependent DNA polymerase<br>
+                    • Replication occurs at replication forks<br>
+                    • Leading strand is synthesized continuously (5'→3')<br>
+                    • Lagging strand is synthesized discontinuously as Okazaki fragments<br>
+                    • DNA ligase joins the fragments<br>
+                    • Requires origin of replication to initiate<br>
+                    • Highly accurate with error rate of ~1 in 10<sup>9</sup> bases<br>
+                    • E. coli completes replication in ~18 minutes at ~2000 bp/second`;
                 }
                 
-                // Genomic diversity
-                if (lowerMessage.includes('genomic diversity') || lowerMessage.includes('diversity') && 
-                    (lowerMessage.includes('genomic') || lowerMessage.includes('genetic'))) {
-                    return `${tone.prefix}Genomic diversity refers to the genetic variation across human populations. The research paper highlights critical issues:<br><br>
-                    <strong>Key findings:</strong><br>
-                    • Despite potential insights, both investigators and participants in genomic research have largely been of European ancestry<br>
-                    • This lack of diversity hinders biological understanding and exacerbates health disparities<br>
-                    • Studies of diverse populations have revealed population-level differences in disease susceptibility and drug responses<br>
-                    • Examples include:<br>
-                    &nbsp;&nbsp;- African ancestry-specific APOL1 variants that protect against sleeping sickness but increase kidney failure risk<br>
-                    &nbsp;&nbsp;- A risk haplotype for type 2 diabetes in SLC16A11 common in Indigenous peoples of the Americas<br>
-                    &nbsp;&nbsp;- PCSK9 loss-of-function mutations more common in people of African ancestry, reducing cholesterol and heart disease risk<br>
-                    • Initiatives like H3Africa are working to increase participation from underrepresented populations${tone.suffix}`;
+                // Transcription
+                if (lowerMessage.includes('transcription') || lowerMessage.includes('rna polymerase') || lowerMessage.includes('mrna')) {
+                    return `Transcription is the process of copying genetic information from DNA to RNA. Key points:<br><br>
+                    <strong>Process:</strong><br>
+                    • Only one DNA strand (template strand) is transcribed<br>
+                    • RNA polymerase catalyzes RNA synthesis (5'→3')<br>
+                    • Promoter region initiates transcription<br>
+                    • Terminator region ends transcription<br>
+                    • In bacteria: single RNA polymerase with σ factor for initiation<br>
+                    • In eukaryotes: three RNA polymerases (I, II, III)<br><br>
+                    <strong>Transcription Unit:</strong><br>
+                    • Promoter: Binding site for RNA polymerase<br>
+                    • Structural gene: Region to be transcribed<br>
+                    • Terminator: Signals end of transcription<br><br>
+                    <strong>Eukaryotic differences:</strong><br>
+                    • Primary transcript (hnRNA) contains introns and exons<br>
+                    • Splicing removes introns and joins exons<br>
+                    • 5' capping with methyl guanosine triphosphate<br>
+                    • 3' poly-A tailing with adenylate residues`;
+                }
+                
+                // Genetic code
+                if (lowerMessage.includes('genetic code') || lowerMessage.includes('codon') || lowerMessage.includes('amino acid')) {
+                    return `The <strong>genetic code</strong> is the set of rules by which information in mRNA is translated into proteins. Key characteristics:<br><br>
+                    • The code is <strong>triplet</strong> - three nucleotides code for one amino acid<br>
+                    • 61 codons code for amino acids, 3 are stop codons<br>
+                    • The code is <strong>degenerate</strong> - most amino acids have multiple codons<br>
+                    • Codons are read continuously without punctuation<br>
+                    • The code is nearly <strong>universal</strong> across organisms<br>
+                    • <span class="start-codon">AUG</span> codes for Methionine and serves as the start codon<br>
+                    • <span class="stop-codon">UAA, UAG, UGA</span> are stop codons<br><br>
+                    The genetic code was deciphered through work by Khorana, Nirenberg, and others using synthetic RNA and cell-free systems.`;
+                }
+                
+                // Translation
+                if (lowerMessage.includes('translation') || lowerMessage.includes('protein synthesis') || lowerMessage.includes('ribosome')) {
+                    return `Translation is the process of protein synthesis from mRNA. Key components and steps:<br><br>
+                    <strong>Components:</strong><br>
+                    • mRNA: Provides the template with codons<br>
+                    • tRNA: Adapter molecule with anticodon and amino acid binding site<br>
+                    • Ribosome: Site of protein synthesis with large and small subunits<br>
+                    • Aminoacyl-tRNA synthetase: Enzymes that charge tRNA with amino acids<br><br>
+                    <strong>Process:</strong><br>
+                    • Initiation: Ribosome binds to start codon (AUG)<br>
+                    • Elongation: Amino acids added one by one to growing polypeptide<br>
+                    • Termination: Stop codon signals release of completed protein<br>
+                    • Ribosomal RNA (rRNA) acts as ribozyme for peptide bond formation<br><br>
+                    Translation requires energy from GTP and occurs in the 5'→3' direction on mRNA.`;
+                }
+                
+                // Lac operon
+                if (lowerMessage.includes('lac operon') || lowerMessage.includes('operon') || lowerMessage.includes('gene regulation')) {
+                    return `The <strong>lac operon</strong> is a classic example of gene regulation in bacteria. Key features:<br><br>
+                    <strong>Components:</strong><br>
+                    • Regulatory gene (i): Codes for repressor protein<br>
+                    • Promoter (P): Binding site for RNA polymerase<br>
+                    • Operator (O): Binding site for repressor<br>
+                    • Structural genes:<br>
+                    &nbsp;&nbsp;- z gene: β-galactosidase (hydrolyzes lactose)<br>
+                    &nbsp;&nbsp;- y gene: Permease (lactose transport)<br>
+                    &nbsp;&nbsp;- a gene: Transacetylase<br><br>
+                    <strong>Regulation:</strong><br>
+                    • In absence of lactose: Repressor binds operator, preventing transcription<br>
+                    • In presence of lactose: Lactose (inducer) binds repressor, inactivating it<br>
+                    • RNA polymerase can then transcribe the operon<br>
+                    • This is an example of <strong>negative regulation</strong><br><br>
+                    The lac operon was elucidated by Jacob and Monod, demonstrating how genes can be regulated by environmental conditions.`;
+                }
+                
+                // Mutations
+                if (lowerMessage.includes('mutation') || lowerMessage.includes('sickle cell') || lowerMessage.includes('frameshift')) {
+                    return `Mutations are changes in DNA sequence that can affect gene function. Types include:<br><br>
+                    <strong>Point mutations:</strong><br>
+                    • Single base pair changes<br>
+                    • Example: Sickle cell anemia - glutamate to valine in β-globin<br><br>
+                    <strong>Frameshift mutations:</strong><br>
+                    • Insertion or deletion of bases (not multiples of 3)<br>
+                    • Changes reading frame from point of mutation<br>
+                    • Example: "RAM HAS RED CAP" → "RAM HAS BRE DCA P"<br><br>
+                    <strong>Effects:</strong><br>
+                    • Silent mutations: No change in amino acid<br>
+                    • Missense mutations: Change to different amino acid<br>
+                    • Nonsense mutations: Change to stop codon<br>
+                    • Frameshift mutations: Complete change in downstream sequence`;
                 }
                 
                 // Human Genome Project
-                if (lowerMessage.includes('human genome project') || lowerMessage.includes('hgp')) {
-                    return `${tone.prefix}The Human Genome Project (HGP) was a landmark international research effort to sequence the entire human genome. Key milestones from the research:<br><br>
-                    <strong>Project timeline:</strong><br>
-                    • 1990: NIH and Department of Energy launched the HGP<br>
-                    • 1994: Human genetic mapping goals met<br>
-                    • 1995: Human physical mapping goals met<br>
-                    • 1997: "Bermuda principles" established rapid, public release of genome data<br>
-                    • 2001: First draft of human genome sequence published by HGP consortium and Celera Genomics<br>
-                    • 2003: HGP completed more than 2 years ahead of schedule<br><br>
-                    <strong>Impact:</strong><br>
-                    • DNA sequencing throughput increased from 1,000 base pairs per day to over 1,000 per second<br>
-                    • Cost of sequencing dropped from $3 billion during HGP to about $600 today<br>
-                    • Enabled discovery of genes for over 5,000 rare Mendelian diseases<br>
-                    • Paved the way for personalized medicine and genomic research${tone.suffix}`;
+                if (lowerMessage.includes('human genome project') || lowerMessage.includes('hgp') || lowerMessage.includes('genome sequencing')) {
+                    return `The <strong>Human Genome Project (HGP)</strong> was an international research effort to sequence the entire human genome. Key facts:<br><br>
+                    <strong>Timeline:</strong><br>
+                    • Launched in 1990, completed in 2003<br>
+                    • Coordinated by US Department of Energy and NIH<br>
+                    • Cost: ~$3 billion initially<br><br>
+                    <strong>Key findings:</strong><br>
+                    • Human genome contains ~3.1 billion base pairs<br>
+                    • ~20,000-25,000 protein-coding genes (fewer than expected)<br>
+                    • Only ~2% of genome codes for proteins<br>
+                    • Large portions consist of repetitive DNA<br>
+                    • 99.9% of DNA sequence is identical in all humans<br><br>
+                    <strong>Techniques:</strong><br>
+                    • Shotgun sequencing of DNA fragments<br>
+                    • Use of BAC (Bacterial Artificial Chromosomes)<br>
+                    • Automated DNA sequencing<br>
+                    • Bioinformatics for sequence assembly`;
                 }
                 
-                // Single-cell sequencing
-                if (lowerMessage.includes('single-cell') || lowerMessage.includes('single cell') || 
-                    (lowerMessage.includes('rna') && lowerMessage.includes('sequencing'))) {
-                    return `${tone.prefix}Single-cell RNA sequencing represents a major advancement in genomics research. According to the latest findings:<br><br>
-                    <strong>Recent developments:</strong><br>
-                    • Genomics research has moved beyond analyzing DNA variation to studying gene expression in individual cells<br>
-                    • Driven by new methods for single-cell RNA sequencing and chromatin analysis<br>
-                    • Tens of millions of cells have been characterized en route to a complete cell atlas of the human body<br>
-                    • This effort is revealing hundreds of new cell types<br>
-                    • Characterizing how cell types differ between healthy people and those with various diseases<br>
-                    • Provides unprecedented resolution for understanding cellular heterogeneity and disease mechanisms${tone.suffix}`;
+                // DNA fingerprinting
+                if (lowerMessage.includes('dna fingerprinting') || lowerMessage.includes('vntr') || lowerMessage.includes('forensic')) {
+                    return `DNA fingerprinting is a technique to identify individuals based on DNA variations. Key aspects:<br><br>
+                    <strong>Basis:</strong><br>
+                    • Uses repetitive DNA sequences that show high polymorphism<br>
+                    • Variable Number of Tandem Repeats (VNTR) are commonly used<br>
+                    • VNTRs are mini-satellites with varying copy numbers<br><br>
+                    <strong>Process:</strong><br>
+                    • Isolate DNA from sample<br>
+                    • Digest with restriction enzymes<br>
+                    • Separate fragments by electrophoresis<br>
+                    • Transfer to membrane (Southern blotting)<br>
+                    • Hybridize with labeled VNTR probe<br>
+                    • Detect pattern by autoradiography<br><br>
+                    <strong>Applications:</strong><br>
+                    • Forensic identification<br>
+                    • Paternity testing<br>
+                    • Population genetics<br>
+                    • Conservation biology<br><br>
+                    Developed by Alec Jeffreys in 1984, DNA fingerprinting revolutionized forensic science.`;
                 }
                 
-                // Biobanks and large-scale genomics
-                if (lowerMessage.includes('biobank') || lowerMessage.includes('all of us') || 
-                    lowerMessage.includes('uk biobank') || lowerMessage.includes('large-scale genomic')) {
-                    return `${tone.prefix}Large-scale biobanks are revolutionizing genomic research. Key initiatives mentioned in the research:<br><br>
-                    <strong>Major projects:</strong><br>
-                    • <strong>UK Biobank:</strong> Contains genetic and health data from half a million participants<br>
-                    • <strong>All of Us Research Program:</strong> NIH initiative enrolling over 1 million participants contributing genetic, health, and environmental data<br>
-                    • <strong>Cancer Genome Atlas (TCGA):</strong> Molecularly characterized over 20,000 samples across 33 cancer types<br>
-                    • <strong>International HapMap Project:</strong> Gathers data on human genetic variation to speed gene discovery<br><br>
-                    <strong>Goals:</strong><br>
-                    • Create comprehensive resources linking genomic information with medical records<br>
-                    • Enable powerful explorations rather than hypothesis-limited research<br>
-                    • Ultimately integrate genomic information into routine medical care${tone.suffix}`;
+                // RNA world
+                if (lowerMessage.includes('rna world') || lowerMessage.includes('first genetic material')) {
+                    return `The <strong>RNA world hypothesis</strong> proposes that RNA was the first genetic material. Evidence includes:<br><br>
+                    • RNA can store genetic information (like DNA)<br>
+                    • RNA can catalyze chemical reactions (ribozymes)<br>
+                    • Essential life processes evolved around RNA<br>
+                    • RNA is involved in protein synthesis (rRNA, tRNA, mRNA)<br>
+                    • RNA can self-replicate in some systems<br><br>
+                    DNA likely evolved from RNA with chemical modifications that made it more stable for long-term genetic information storage.`;
                 }
                 
-                // Gene therapy
-                if (lowerMessage.includes('gene therapy') || (lowerMessage.includes('gene') && 
-                    lowerMessage.includes('therapy')) || lowerMessage.includes('molecularly targeted')) {
-                    return `${tone.prefix}Gene therapy represents a promising approach for treating genetic disorders. Recent advances include:<br><br>
-                    <strong>Success stories:</strong><br>
-                    • Safe and effective molecularly targeted drugs now available for 90% of people with cystic fibrosis<br>
-                    • Dramatic successes for spinal muscular atrophy and hemophilia<br>
-                    • For some Mendelian disorders, targeted drugs have been developed using detailed pathophysiology understanding<br><br>
-                    <strong>Challenges:</strong><br>
-                    • Developing and validating treatments has been more challenging than diagnosis<br>
-                    • The traditional approach can take decades and doesn't scale well to thousands of genetic disorders<br>
-                    • Precisely targeted genome-editing technologies now provide new therapeutic avenues${tone.suffix}`;
-                }
-                
-                // DNA Structure responses
-                if (lowerMessage.includes('dna') && (lowerMessage.includes('structure') || lowerMessage.includes('helix'))) {
-                    return `${tone.prefix}DNA has a double-helical structure with two antiparallel strands. The backbone consists of deoxyribose sugars connected by phosphodiester bonds. Bases (A, T, C, G) pair specifically: A-T with 2 hydrogen bonds and G-C with 3 hydrogen bonds. DNA exists in different helical forms (A, B, C) with B-form being most common in cells. The structure allows for information storage and precise replication.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('central dogma')) {
-                    return `${tone.prefix}The Central Dogma describes the flow of genetic information: DNA → RNA → Protein. DNA is transcribed to mRNA, which is then translated into proteins. This process ensures genetic information is accurately passed from genes to functional proteins. It's a fundamental principle in molecular biology.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('rna polymerase') || lowerMessage.includes('transcription')) {
-                    return `${tone.prefix}RNA polymerase is the enzyme that synthesizes RNA from a DNA template. E. coli has one RNA polymerase with multiple subunits (β, β', α, σ), while eukaryotes have three types (I, II, III). Transcription involves initiation (polymerase binding to promoter), elongation (RNA synthesis), and termination. The σ subunit helps recognize promoters, and different σ factors allow transcription of different gene classes.${tone.suffix}`;
-                }
-                
-                if (lowerMessage.includes('translation') || lowerMessage.includes('protein synthesis')) {
-                    return `${tone.prefix}Translation converts mRNA into proteins using ribosomes. It involves initiation (ribosome assembly on mRNA), elongation (amino acid addition), and termination (protein release). Transfer RNA (tRNA) brings amino acids to the ribosome, where they're added to the growing polypeptide chain. The genetic code is read in triplets (codons), with AUG as start and UAA/UAG/UGA as stop codons.${tone.suffix}`;
-                }
-                
-                // Ethical considerations
-                if (lowerMessage.includes('ethical') || lowerMessage.includes('privacy') || 
-                    lowerMessage.includes('heritable') || lowerMessage.includes('equitable')) {
-                    return `${tone.prefix}Ethical considerations in genomics are increasingly important. The research highlights several key questions:<br><br>
-                    <strong>Critical issues:</strong><br>
-                    • How do we ensure equitable and inclusive access to research opportunities and therapeutic benefits?<br>
-                    • How do we balance scientific progress with emerging ethical issues?<br>
-                    • Questions regarding the use of genome-editing technologies for heritable genetic changes<br>
-                    • How do we sustain data-sharing ethos while protecting participant privacy and respecting cultural norms?<br><br>
-                    These questions underscore why oversight bodies like the National Academy of Medicine will be crucial in the coming decades.${tone.suffix}`;
-                }
-                
-                // Default response with research context
-                return `${tone.prefix}I'm MolGenoBot, trained on the latest molecular genetics research including "Human Molecular Genetics and Genomics — Important Advances and Exciting Possibilities." I can explain DNA structure, replication, transcription, translation, gene regulation, mutations, CRISPR technology, genomic diversity, polygenic risk scores, single-cell sequencing, biobanks, gene therapy, and ethical considerations in genomics. Could you please ask about one of these specific topics or rephrase your question?${tone.suffix}`;
+                // Default response
+                return `I'm MolGenoBot, your molecular genetics assistant! I can explain:<br><br>
+                • DNA structure and the double helix<br>
+                • DNA replication (semiconservative model)<br>
+                • Transcription and RNA processing<br>
+                • The genetic code and codon usage<br>
+                • Translation and protein synthesis<br>
+                • Gene regulation (like the lac operon)<br>
+                • Mutations and their effects<br>
+                • The Human Genome Project<br>
+                • DNA fingerprinting techniques<br>
+                • The RNA world hypothesis<br><br>
+                What specific topic would you like to learn more about?`;
             }
             
             // Detect tone from user message
